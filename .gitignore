@@ -1,0 +1,8 @@
+.idea
+
+/backend/database
+/backend/Backend/bin
+/backend/Backend/obj
+/backend/bin
+/backend/obj
+/backend/.vs
