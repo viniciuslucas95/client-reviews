@@ -6,6 +6,7 @@ namespace Backend.Controller.Client;
 
 [Route("api/[controller]")]
 [ApiController]
+[Produces("application/json", "text/plain")]
 public class ClientController : ControllerBase
 {
     private readonly IClientService _service;
@@ -28,20 +29,28 @@ public class ClientController : ControllerBase
     //}
 
     [HttpPost]
+    [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status409Conflict)]
     public async Task<int> Post([FromBody] CreateClientDto dto)
     {
         return await _service.CreateAsync(dto.Name, dto.ContactName, dto.Date, dto.Cnpj);
     }
 
-    //[HttpPut("{id}")]
-    //public void Put(int id, [FromBody] string value)
-    //{
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status409Conflict)]
+    public async Task Put(int id, [FromBody] UpdateClientDto dto)
+    {
+        await _service.UpdateAsync(id, dto.Name, dto.ContactName, dto.Date, dto.Cnpj);
+    }
 
-    //}
-
-    //[HttpDelete("{id}")]
-    //public void Delete(int id)
-    //{
-
-    //}
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status404NotFound)]
+    public async Task Delete(int id)
+    {
+        await _service.DeleteAsync(id);
+    }
 }

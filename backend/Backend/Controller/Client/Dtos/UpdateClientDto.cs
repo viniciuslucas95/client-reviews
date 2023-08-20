@@ -2,7 +2,7 @@
 
 namespace Backend.Controller.Client.Dtos;
 
-public class CreateClientDto
+public class UpdateClientDto
 {
 #pragma warning disable CS8618
     [MinLength(1)]
