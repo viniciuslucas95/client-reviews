@@ -1,4 +1,6 @@
 .idea
+.vs
+.github
 
 /backend/database
 /backend/Backend/bin
