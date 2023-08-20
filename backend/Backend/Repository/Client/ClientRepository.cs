@@ -1,7 +1,9 @@
-﻿using Backend.Util.QueryBuilder;
+﻿using Backend.DTO;
+using Backend.DTO.Client;
+using Backend.Util.QueryBuilder;
 using Dapper;
 
-namespace Backend.Repository;
+namespace Backend.Repository.Client;
 
 public class ClientRepository : RepositoryBase<IClientQueryBuilder>, IClientRepository
 {
@@ -80,6 +82,38 @@ public class ClientRepository : RepositoryBase<IClientQueryBuilder>, IClientRepo
             var found = results.Any();
 
             return found;
+        });
+    }
+
+    public async Task<PaginatedDto<PaginatedClientDto>> GetPaginatedAsync(int offset = 0)
+    {
+        return await Database.WithConnectionAsync(async connection =>
+        {
+            var countSql = QueryBuilder.BuildCountSql();
+
+            var countResult = await connection.QueryAsync<int>(countSql);
+
+            var paginteSql = QueryBuilder.BuildPaginateSql();
+
+            var items = await connection.QueryAsync<PaginatedClientDto>(paginteSql, new { Offset = offset });
+
+            return new PaginatedDto<PaginatedClientDto>
+            {
+                Count = countResult.ToArray()[0],
+                Items = items
+            };
+        });
+    }
+
+    public async Task<GetClientDto?> GetAsync(int id)
+    {
+        return await Database.WithConnectionAsync(async connection =>
+        {
+            var sql = QueryBuilder.BuildGetSql();
+
+            var result = await connection.QueryAsync<GetClientDto>(sql, new { Id = id });
+
+            return result.Any() ? result.ToArray()[0] : null;
         });
     }
 }

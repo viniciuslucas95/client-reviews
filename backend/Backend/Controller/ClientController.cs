@@ -1,8 +1,10 @@
-﻿using Backend.Controller.Client.Dtos;
+﻿using Backend.DTO;
+using Backend.DTO.Client;
+using Backend.Exception;
 using Backend.Service;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Controller.Client;
+namespace Backend.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,17 +18,26 @@ public class ClientController : ControllerBase
         _service = service;
     }
 
-    //[HttpGet]
-    //public IEnumerable<string> Get()
-    //{
-    //    return new string[] { "value1", "value2" };
-    //}
+    [HttpGet]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
+    public async Task<PaginatedDto<PaginatedClientDto>> Paginate([FromQuery] int offset = 0)
+    {
+        if (offset < 0)
+        {
+            throw new BadRequestException("Invalid type", "Offset cannot be lower than 0");
+        }
 
-    //[HttpGet("{id}")]
-    //public string Get(int id)
-    //{
-    //    return "value";
-    //}
+        return await _service.GetPaginatedAsync(offset);
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status404NotFound)]
+    public async Task<GetClientDto?> Get(int id)
+    {
+        return await _service.GetAsync(id);
+    }
 
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]

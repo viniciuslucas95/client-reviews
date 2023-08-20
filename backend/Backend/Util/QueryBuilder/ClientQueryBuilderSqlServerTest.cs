@@ -72,7 +72,7 @@ public class ClientQueryBuilderSqlServerTest
     }
 
     [Fact]
-    public void BuildCountTest()
+    public void BuildCountSqlTest()
     {
         var queryBuilder = new ClientQueryBuilderSqlServer();
         var sql = queryBuilder.BuildCountSql();
@@ -83,12 +83,23 @@ public class ClientQueryBuilderSqlServerTest
     }
 
     [Fact]
-    public void BuildPaginateTest()
+    public void BuildPaginateSqlTest()
     {
         var queryBuilder = new ClientQueryBuilderSqlServer();
         var sql = queryBuilder.BuildPaginateSql();
 
-        var expected = "SELECT * FROM clients OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+        var expected = "SELECT *, contact_name AS \"ContactName\" FROM clients ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+
+        Assert.Equal(sql, expected);
+    }
+
+    [Fact]
+    public void BuildGetSqlTest()
+    {
+        var queryBuilder = new ClientQueryBuilderSqlServer();
+        var sql = queryBuilder.BuildGetSql();
+
+        var expected = "SELECT *, contact_name AS \"ContactName\" FROM clients WHERE Id = @Id;";
 
         Assert.Equal(sql, expected);
     }

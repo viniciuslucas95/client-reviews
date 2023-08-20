@@ -1,4 +1,5 @@
 using Backend.Repository;
+using Backend.Repository.Client;
 using Backend.Service;
 using Backend.Util.QueryBuilder;
 

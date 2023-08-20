@@ -31,4 +31,8 @@ public interface IClientQueryBuilder
     /// Parameters: <b>Offset</b>
     /// </summary>
     public string BuildPaginateSql();
+    /// <summary>
+    /// Parameters: <b>Id</b>
+    /// </summary>
+    public string BuildGetSql();
 }

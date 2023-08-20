@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Controller.Client.Dtos;
+namespace Backend.DTO.Client;
 
 public class UpdateClientDto
 {

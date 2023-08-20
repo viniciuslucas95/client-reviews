@@ -1,5 +1,7 @@
-﻿using Backend.Exception;
-using Backend.Repository;
+﻿using Backend.DTO;
+using Backend.DTO.Client;
+using Backend.Exception;
+using Backend.Repository.Client;
 using Backend.Util.Extension;
 
 namespace Backend.Service;
@@ -40,6 +42,23 @@ public class ClientService : IClientService
         }
 
         await _repository.DeleteAsync(id);
+    }
+
+    public async Task<PaginatedDto<PaginatedClientDto>> GetPaginatedAsync(int offset = 0)
+    {
+        return await _repository.GetPaginatedAsync(offset);
+    }
+
+    public async Task<GetClientDto?> GetAsync(int id)
+    {
+        var result = await _repository.GetAsync(id);
+
+        if (result is null)
+        {
+            throw new NotFoundException("Client not found", "Client not found");
+        }
+
+        return result;
     }
 
     private async Task ValidatePropsAsync(string name, string contactName, DateTime date, string? cnpj, int? id = null)

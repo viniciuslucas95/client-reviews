@@ -75,6 +75,11 @@ public class ClientQueryBuilderSqlServer : IClientQueryBuilder
 
     public string BuildPaginateSql()
     {
-        return "SELECT * FROM clients OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+        return "SELECT *, contact_name AS \"ContactName\" FROM clients ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+    }
+
+    public string BuildGetSql()
+    {
+        return "SELECT *, contact_name AS \"ContactName\" FROM clients WHERE Id = @Id;";
     }
 }
