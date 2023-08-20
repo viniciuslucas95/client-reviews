@@ -70,4 +70,26 @@ public class ClientQueryBuilderSqlServerTest
 
         Assert.Equal(sql, expected);
     }
+
+    [Fact]
+    public void BuildCountTest()
+    {
+        var queryBuilder = new ClientQueryBuilderSqlServer();
+        var sql = queryBuilder.BuildCountSql();
+
+        var expected = "SELECT COUNT(*) FROM clients;";
+
+        Assert.Equal(sql, expected);
+    }
+
+    [Fact]
+    public void BuildPaginateTest()
+    {
+        var queryBuilder = new ClientQueryBuilderSqlServer();
+        var sql = queryBuilder.BuildPaginateSql();
+
+        var expected = "SELECT * FROM clients OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+
+        Assert.Equal(sql, expected);
+    }
 }

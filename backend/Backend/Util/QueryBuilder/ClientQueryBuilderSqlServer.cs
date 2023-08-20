@@ -67,4 +67,14 @@ public class ClientQueryBuilderSqlServer : IClientQueryBuilder
     {
         return "DELETE FROM clients WHERE id = @Id;";
     }
+
+    public string BuildCountSql()
+    {
+        return "SELECT COUNT(*) FROM clients;";
+    }
+
+    public string BuildPaginateSql()
+    {
+        return "SELECT * FROM clients OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+    }
 }

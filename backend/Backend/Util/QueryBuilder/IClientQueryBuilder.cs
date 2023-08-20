@@ -26,4 +26,9 @@ public interface IClientQueryBuilder
     /// Parameters: <b>Id</b>
     /// </summary>
     public string BuildDeleteSql();
+    public string BuildCountSql();
+    /// <summary>
+    /// Parameters: <b>Offset</b>
+    /// </summary>
+    public string BuildPaginateSql();
 }
