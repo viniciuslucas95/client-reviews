@@ -19,14 +19,55 @@ public class ClientQueryBuilderSqlServerTest
         Assert.Equal(expected, sql);
     }
 
-    [Fact]
-    public void BuildIsCnpjAlreadyRegisteredSqlTest()
+    [Theory]
+    [InlineData()]
+    [InlineData(true)]
+    public void BuildUpdateSqlTest(bool includeCnpj = false)
     {
         var queryBuilder = new ClientQueryBuilderSqlServer();
-        var sql = queryBuilder.BuildIsCnpjAlreadyRegisteredSql();
+        var sql = queryBuilder.BuildUpdateSql(includeCnpj);
 
-        var expected = "SELECT TOP 1 1 FROM clients WHERE cnpj = @Cnpj;";
+        var expected = !includeCnpj ?
+            "UPDATE clients SET name = @Name, contact_name = @ContactName, date = @Date WHERE id = @Id;" :
+            "UPDATE clients SET name = @Name, contact_name = @ContactName, date = @Date, cnpj = @Cnpj WHERE id = @Id;";
 
         Assert.Equal(expected, sql);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData(5)]
+    public void BuildIsCnpjAlreadyRegisteredSqlTest(int? excludeId)
+    {
+        var queryBuilder = new ClientQueryBuilderSqlServer();
+        var sql = queryBuilder.BuildIsCnpjAlreadyRegisteredSql(excludeId);
+
+        var expected = excludeId is null ?
+            "SELECT TOP 1 1 FROM clients WHERE cnpj = @Cnpj;" :
+            "SELECT TOP 1 1 FROM clients WHERE cnpj = @Cnpj AND id != @Id;";
+
+        Assert.Equal(expected, sql);
+    }
+
+    [Fact]
+    public void BuildDoesExistSqlTest()
+    {
+        var queryBuilder = new ClientQueryBuilderSqlServer();
+        var sql = queryBuilder.BuildDoesExistSql();
+
+        var expected = "SELECT TOP 1 1 FROM clients WHERE id = @Id;";
+
+        Assert.Equal(sql, expected);
+    }
+
+    [Fact]
+    public void BuildDeleteSqlTest()
+    {
+        var queryBuilder = new ClientQueryBuilderSqlServer();
+        var sql = queryBuilder.BuildDeleteSql();
+
+        var expected = "DELETE FROM clients WHERE id = @Id;";
+
+        Assert.Equal(sql, expected);
     }
 }
