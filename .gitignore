@@ -2,6 +2,11 @@
 .vs
 .github
 
+/frontend/node_modules
+/frontend/dist
+/frontend/.idea
+/frontend/.angular
+
 /backend/database
 /backend/Backend/bin
 /backend/Backend/obj
