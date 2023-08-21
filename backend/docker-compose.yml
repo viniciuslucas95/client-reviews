@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Backend/Dockerfile
+    ports:
+      - "3000:80"
     container_name: cadastro-pesquisa-backend
     restart: always
 
