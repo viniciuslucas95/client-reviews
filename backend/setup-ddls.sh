@@ -18,7 +18,7 @@ CREATE INDEX ix_name ON clients (name);
 CREATE TABLE client_reviews (
     id INT IDENTITY(1,1) PRIMARY KEY,
     date DATETIME NOT NULL,
-    client_id INT NOT NULL FOREIGN KEY (id) REFERENCES clients(id),
+    client_id INT NOT NULL FOREIGN KEY (client_id) REFERENCES clients(id),
     score INT NOT NULL,
     reason NVARCHAR(MAX) NOT NULL
 );
