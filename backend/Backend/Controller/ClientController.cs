@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controller;
 
-[Route("api/[controller]")]
+[Route("api/clients")]
 [ApiController]
 [Produces("application/json", "text/plain")]
 public class ClientController : ControllerBase
