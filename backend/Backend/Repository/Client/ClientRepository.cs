@@ -1,6 +1,6 @@
 ﻿using Backend.DTO;
 using Backend.DTO.Client;
-using Backend.Util.QueryBuilder;
+using Backend.Util.QueryBuilder.Client;
 using Dapper;
 
 namespace Backend.Repository.Client;

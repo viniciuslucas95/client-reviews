@@ -4,7 +4,7 @@ using Backend.Exception;
 using Backend.Repository.Client;
 using Backend.Util.Extension;
 
-namespace Backend.Service;
+namespace Backend.Service.Client;
 
 public class ClientService : IClientService
 {

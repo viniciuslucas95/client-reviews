@@ -15,7 +15,7 @@ CREATE TABLE clients (
 
 CREATE INDEX ix_name ON clients (name);
 
-CREATE TABLE reviews (
+CREATE TABLE client_reviews (
     id INT IDENTITY(1,1) PRIMARY KEY,
     date DATETIME NOT NULL,
     client_id INT NOT NULL FOREIGN KEY (id) REFERENCES clients(id),
@@ -23,5 +23,5 @@ CREATE TABLE reviews (
     reason NVARCHAR(MAX) NOT NULL
 );
 
-CREATE INDEX ix_cmp_client_id_date ON reviews (client_id, date DESC);
+CREATE INDEX ix_cmp_client_id_date ON client_reviews (client_id, date DESC);
 "

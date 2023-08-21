@@ -1,7 +1,7 @@
 ﻿using Backend.DTO;
 using Backend.DTO.Client;
 
-namespace Backend.Service;
+namespace Backend.Service.Client;
 
 public interface IClientService
 {

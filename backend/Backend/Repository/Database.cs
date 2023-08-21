@@ -23,4 +23,26 @@ public class Database
 
         return results;
     }
+
+    public async Task<T> WithTransactionAsync<T>(Func<SqlConnection, SqlTransaction, Task<T>> exec)
+    {
+        return await WithConnectionAsync(async connection =>
+        {
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                var results = await exec(connection, transaction);
+
+                transaction.Commit();
+
+                return results;
+            }
+            catch (System.Exception ex)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        });
+    }
 }

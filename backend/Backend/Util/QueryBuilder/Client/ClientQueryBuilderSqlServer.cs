@@ -1,4 +1,4 @@
-﻿namespace Backend.Util.QueryBuilder;
+﻿namespace Backend.Util.QueryBuilder.Client;
 
 public class ClientQueryBuilderSqlServer : IClientQueryBuilder
 {

@@ -1,7 +1,7 @@
 ﻿using Backend.DTO;
 using Backend.DTO.Client;
 using Backend.Exception;
-using Backend.Service;
+using Backend.Service.Client;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controller;

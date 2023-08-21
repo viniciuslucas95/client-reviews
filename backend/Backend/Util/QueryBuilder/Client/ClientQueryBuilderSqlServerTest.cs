@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Backend.Util.QueryBuilder;
+namespace Backend.Util.QueryBuilder.Client;
 
 public class ClientQueryBuilderSqlServerTest
 {
