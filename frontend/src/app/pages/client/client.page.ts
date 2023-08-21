@@ -7,6 +7,7 @@ import DateUtil from "../../utils/date.util";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateClientModalComponent} from "./components/create-client-modal/create-client-modal.component";
 import {ActivatedRoute} from "@angular/router";
+import CategoryUtil from "../../utils/category.util";
 
 @Component({
   selector: 'app-client-page',
@@ -33,6 +34,10 @@ export class ClientPage implements OnInit {
       {
         key: 'date',
         name: 'Registrado Em'
+      },
+      {
+        key: 'score',
+        name: 'Categoria'
       }
     ]
   }
@@ -42,6 +47,7 @@ export class ClientPage implements OnInit {
   constructor(
       private readonly _service: ClientService,
       private readonly _dateUtil: DateUtil,
+      private readonly _categoryUtil: CategoryUtil,
       private readonly _modalService: NgbModal,
       private readonly _route: ActivatedRoute
   ) {
@@ -79,7 +85,8 @@ export class ClientPage implements OnInit {
         items: res.items.map(item => ({
           ...item,
           cnpj: item.cnpj ?? "Não informado",
-          date: this._dateUtil.formatToPtString(item.date)
+          date: this._dateUtil.formatToPtString(item.date),
+          score: this._categoryUtil.get(item.score)
         }))
       }
     })
