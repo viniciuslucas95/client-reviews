@@ -3,31 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import {TableContent} from "./table.component.type";
 
 @Component({
-  selector: 'app-table[onPageChanged][content]',
+  selector: 'app-table[onPageChanged][content][page]',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent<T> implements OnInit{
+export class TableComponent<T> {
   @Input() content!:TableContent<T>;
   @Input() onPageChanged!: (page:number)=>void
-
-  public page = 1
-
-  constructor(private readonly _route: ActivatedRoute) { }
-
-  ngOnInit(){
-    const pageString = this._route.snapshot.paramMap.get('page');
-
-    if(!pageString)  return
-
-    const page = parseInt(pageString)
-
-    if(isNaN(page)) return
-
-    if(page < 1) return
-
-    this.page = page
-  }
+  @Input() page!:number
 
   getItemPropValue(item:T, key:keyof T){
     return item[key]

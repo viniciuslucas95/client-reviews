@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 
 import ServiceBase from "../../base/service.base";
 import PaginatedDto from "../../dtos/paginated.dto";
-import {ClientTableContentItem} from "./client.dto";
+import {ClientTableContentItem, CreateClientDto} from "./client.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -15,5 +15,9 @@ export default class ClientService extends ServiceBase{
 
     getPaginated(offset = 0){
         return this.httpClient.get<PaginatedDto<ClientTableContentItem>>(this.baseUrl + `?offset=${offset.toString()}`)
+    }
+
+    create(dto:CreateClientDto){
+        return this.httpClient.post<number>(this.baseUrl, dto)
     }
 }

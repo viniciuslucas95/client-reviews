@@ -4,9 +4,9 @@
         <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
     </form>
 
-    <button class="btn btn-primary" type="button">Novo</button>
+    <button class="btn btn-primary" type="button" (click)="onCreateClient()">Novo</button>
 </app-header>
 
 <app-page-container>
-    <app-table [content]="tableContent" [onPageChanged]="onPageChanged"></app-table>
+    <app-table [content]="tableContent" [onPageChanged]="onPageChanged" [page]="page"></app-table>
 </app-page-container>
