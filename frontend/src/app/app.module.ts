@@ -8,6 +8,7 @@ import {ClientModule} from "./pages/client/client.module";
 import {ReviewModule} from "./pages/review/review.module";
 import {ComponentsModule} from "./components/components.module";
 import {HttpClientModule} from "@angular/common/http";
+import {CreateReviewModule} from "./pages/review/pages/create-review/create-review.module";
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import {HttpClientModule} from "@angular/common/http";
     AppRoutingModule,
     ClientModule,
     ReviewModule,
+    CreateReviewModule,
     ComponentsModule,
     HttpClientModule
   ],

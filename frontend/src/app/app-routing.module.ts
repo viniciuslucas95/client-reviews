@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {ClientPage} from "./pages/client/client.page";
 import {ReviewPage} from "./pages/review/review.page";
+import {CreateReviewPage} from "./pages/review/pages/create-review/create-review.page";
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: 'avaliacoes',
     component: ReviewPage
+  },
+  {
+    path: 'avaliacoes/criar',
+    component: CreateReviewPage
   },
   {
     path: '**',
