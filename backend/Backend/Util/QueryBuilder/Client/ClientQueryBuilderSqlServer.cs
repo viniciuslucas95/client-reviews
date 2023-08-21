@@ -75,7 +75,7 @@ public class ClientQueryBuilderSqlServer : IClientQueryBuilder
 
     public string BuildPaginateSql()
     {
-        return "SELECT *, contact_name AS \"ContactName\" FROM clients ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+        return "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, a.date, b.score FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id) ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
     }
 
     public string BuildGetSql()

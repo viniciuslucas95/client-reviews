@@ -6,7 +6,6 @@ public class CreateClientReviewDto
 {
 #pragma warning disable CS8618
     [Required]
-    [MinLength(1)]
     public int ClientId { get; set; }
 
     [Required]
