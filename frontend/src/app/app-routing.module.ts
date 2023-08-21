@@ -5,7 +5,7 @@ import {ReviewPage} from "./pages/review/review.page";
 
 const routes: Routes = [
   {
-    path: 'clientes',
+    path: 'clientes/:page',
     component: ClientPage
   },
   {
@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'clientes',
+    redirectTo: 'clientes/1',
     pathMatch: 'full'
   }
 ];

@@ -1,0 +1,36 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col" *ngFor="let item of content.columns">{{item.name}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of content.items">
+            <td *ngFor="let column of content.columns">{{getItemPropValue(item, column.key)}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between">
+    <span>Total: {{getTotalItemsString()}}</span>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" *ngIf="page > 1">
+                <a class="page-link" href="clientes/{{page - 1}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item" *ngFor="let page of getPages()">
+                <a class="page-link" href="clientes/{{page}}">{{page.toString()}}</a>
+            </li>
+
+            <li class="page-item" *ngIf="page < getTotalPages()">
+                <a class="page-link" href="clientes/{{page + 1}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

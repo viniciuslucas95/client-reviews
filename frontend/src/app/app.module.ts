@@ -7,6 +7,7 @@ import { LateralMenuComponent } from './components/lateral-menu/lateral-menu.com
 import {ClientModule} from "./pages/client/client.module";
 import {ReviewModule} from "./pages/review/review.module";
 import {ComponentsModule} from "./components/components.module";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {ComponentsModule} from "./components/components.module";
     AppRoutingModule,
     ClientModule,
     ReviewModule,
-    ComponentsModule
+    ComponentsModule,
+    HttpClientModule
   ],
   providers: [],
   exports: [],
