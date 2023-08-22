@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 import {CreateReviewPage} from "./create-review.page";
 import {ComponentsModule} from "../../../../components/components.module";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {CreateReviewModalComponent} from "./components/create-review-modal/create-review-modal.component";
 
 @NgModule({
     declarations: [
-        CreateReviewPage
+        CreateReviewPage,
+        CreateReviewModalComponent
     ],
     imports: [
         ComponentsModule,

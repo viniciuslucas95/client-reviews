@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ActivatedRoute, Router} from "@angular/router";
 
 import {TableContent} from "../../components/table/table.component.type";
 import {ClientTableContentItem} from "./client.dto";
 import ClientService from "./client.service";
 import DateUtil from "../../utils/date.util";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateClientModalComponent} from "./components/create-client-modal/create-client-modal.component";
-import {ActivatedRoute} from "@angular/router";
 import CategoryUtil from "../../utils/category.util";
 
 @Component({
@@ -49,25 +49,29 @@ export class ClientPage implements OnInit {
       private readonly _dateUtil: DateUtil,
       private readonly _categoryUtil: CategoryUtil,
       private readonly _modalService: NgbModal,
-      private readonly _route: ActivatedRoute
+      private readonly _activatedRoute: ActivatedRoute
   ) {
 
   }
 
-    ngOnInit(){
-      const pageString = this._route.snapshot.paramMap.get('page');
+  ngOnInit(){
+    const pageString = this._activatedRoute.snapshot.paramMap.get('page');
 
-      if(!pageString)  return
+    if(!pageString)  return
 
-      const page = parseInt(pageString)
+    const page = parseInt(pageString)
 
-      if(isNaN(page)) return
+    if(isNaN(page)) return
 
-      if(page < 1) return
+    if(page < 1) return
 
-      this.page = page
+    this.page = page
 
-      this.onPageChanged(this.page)
+    this.onPageChanged(this.page)
+  }
+
+  onTablePageChanged(page:number){
+    location.replace(`/clientes/${page}`)
   }
 
   onPageChanged(page:number){
@@ -84,6 +88,7 @@ export class ClientPage implements OnInit {
         total: res.count,
         items: res.items.map(item => ({
           ...item,
+          id: item.id.toString(),
           cnpj: item.cnpj ?? "Não informado",
           date: this._dateUtil.formatToPtString(item.date),
           score: this._categoryUtil.get(item.score)
@@ -95,6 +100,8 @@ export class ClientPage implements OnInit {
   onCreateClient(){
     const modalRef = this._modalService.open(CreateClientModalComponent);
 
-    modalRef.result.then(() => location.reload())
+    modalRef.result
+        .then(() => location.reload())
+        .catch(_ => {})
   }
 }

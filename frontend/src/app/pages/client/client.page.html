@@ -8,5 +8,5 @@
 </app-header>
 
 <app-page-container>
-    <app-table [content]="tableContent" [onPageChanged]="onPageChanged" [page]="page"></app-table>
+    <app-table [content]="tableContent" [onPageChanged]="onTablePageChanged.bind(this)" [page]="page"></app-table>
 </app-page-container>

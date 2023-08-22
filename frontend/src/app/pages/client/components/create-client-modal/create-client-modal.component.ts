@@ -4,7 +4,7 @@ import ClientService from "../../client.service";
 import {CreateClientDto} from "../../client.dto";
 
 @Component({
-  selector: 'app-create-client-modal',
+  selector: 'app-create-review-modal',
   templateUrl: './create-client-modal.component.html',
   styleUrls: ['./create-client-modal.component.scss']
 })

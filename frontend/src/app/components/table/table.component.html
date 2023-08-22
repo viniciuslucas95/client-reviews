@@ -1,13 +1,21 @@
 <table class="table">
     <thead>
-        <tr>
-            <th scope="col" *ngFor="let item of content.columns">{{item.name}}</th>
-        </tr>
+    <tr>
+        <th scope="col" *ngFor="let item of content.columns">{{item.name}}</th>
+    </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of content.items">
-            <td *ngFor="let column of content.columns">{{getItemPropValue(item, column.key)}}</td>
-        </tr>
+    <tr *ngFor="let item of content.items">
+        <td *ngFor="let column of content.columns">
+            <span *ngIf="getItemPropContentType(item, column.key) === 'text'">{{getItemPropText(item, column.key)}}</span>
+
+            <div *ngIf="getItemPropContentType(item, column.key) === 'buttons'">
+                <button *ngFor="let button of getItemPropButtons(item, column.key)" class="{{button.class}}" (click)="button.onClick()">
+                    <span class="{{button.iconClass}}"></span>
+                </button>
+            </div>
+        </td>
+    </tr>
     </tbody>
 </table>
 
@@ -16,18 +24,18 @@
 
     <nav aria-label="Page navigation example">
         <ul class="pagination">
-            <li class="page-item" *ngIf="page > 1">
-                <a class="page-link" href="clientes/{{page - 1}}" aria-label="Previous">
+            <li class="page-item pointer" *ngIf="page > 1" (click)="onPageChanged(page - 1)">
+                <a class="page-link" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
-            <li class="page-item" *ngFor="let page of getPages()">
-                <a class="page-link" href="clientes/{{page}}">{{page.toString()}}</a>
+            <li class="page-item pointer" *ngFor="let page of getPages()" (click)="onPageChanged(page)">
+                <a class="page-link">{{page.toString()}}</a>
             </li>
 
-            <li class="page-item" *ngIf="page < getTotalPages()">
-                <a class="page-link" href="clientes/{{page + 1}}" aria-label="Next">
+            <li class="page-item pointer" *ngIf="page < getTotalPages()" (click)="onPageChanged(page + 1)">
+                <a class="page-link" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

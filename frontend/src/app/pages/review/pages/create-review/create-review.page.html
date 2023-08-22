@@ -6,5 +6,5 @@
 </app-header>
 
 <app-page-container>
-    <span>Página das Avaliações</span>
+    <app-table [content]="tableContent" [onPageChanged]="onPageChanged.bind(this)" [page]="page"></app-table>
 </app-page-container>

@@ -1,19 +1,28 @@
-import {Component, Input, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {TableContent} from "./table.component.type";
+import {Component, Input} from '@angular/core';
+
+import {TableButtonsColumn, TableContent} from "./table.component.type";
 
 @Component({
   selector: 'app-table[onPageChanged][content][page]',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent<T> {
+export class TableComponent<T extends {id: string}> {
   @Input() content!:TableContent<T>;
   @Input() onPageChanged!: (page:number)=>void
   @Input() page!:number
 
-  getItemPropValue(item:T, key:keyof T){
-    return item[key]
+  getItemPropContentType(item: T, key: keyof T){
+    if(typeof item[key] === 'object') return 'buttons'
+    return 'text'
+  }
+
+  getItemPropText(item:T, key:keyof T){
+    return item[key] as string
+  }
+
+  getItemPropButtons(item:T, key:keyof T){
+    return item[key] as TableButtonsColumn[]
   }
 
   getTotalItems(){

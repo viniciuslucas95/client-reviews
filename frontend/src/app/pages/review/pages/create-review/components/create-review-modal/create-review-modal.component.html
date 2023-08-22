@@ -1,0 +1,15 @@
+<div class="input-group create-review-modal-container">
+    <form class="d-flex flex-column w-100">
+        <div class="mb-3">
+            <label for="score" class="form-label">Pontuação</label>
+            <input placeholder="Nota do cliente (de 0 a 10)" type="text" class="form-control" id="score" name="score" [(ngModel)]="formData.score">
+        </div>
+
+        <div class="mb-3">
+            <label for="reason" class="form-label">Motivo</label>
+            <input placeholder="Explique o motivo da nota" type="text" class="form-control" id="reason" name="reason" [(ngModel)]="formData.reason">
+        </div>
+
+        <button type="submit" class="btn btn-primary" (click)="onConfirm()">Adicionar Nota</button>
+    </form>
+</div>
