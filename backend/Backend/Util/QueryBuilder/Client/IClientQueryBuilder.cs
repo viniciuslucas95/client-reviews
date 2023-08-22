@@ -26,17 +26,20 @@ public interface IClientQueryBuilder
     /// Parameters: <b>Id</b>
     /// </summary>
     public string BuildDeleteSql();
-    public string BuildCountSql();
     /// <summary>
-    /// Parameters: <b>Offset</b>
+    /// Parameters: <b>Name</b>
     /// </summary>
-    public string BuildPaginateSql();
+    public string BuildCountSql(bool includeName);
+    /// <summary>
+    /// Parameters: <b>Offset</b> and <b>Name</b>
+    /// </summary>
+    public string BuildPaginateSql(bool includeName);
     /// <summary>
     /// Parameters: <b>Id</b>
     /// </summary>
     public string BuildGetSql();
     /// <summary>
-    /// Parameters: <b>Offset</b>
+    /// Parameters: <b>Offset</b> and <b>Name</b>
     /// </summary>
-    public string BuildPaginateForReviewCreationSql();
+    public string BuildPaginateForReviewCreationSql(bool includeName);
 }

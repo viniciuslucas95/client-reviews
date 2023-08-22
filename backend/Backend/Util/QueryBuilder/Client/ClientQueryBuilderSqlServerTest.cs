@@ -71,24 +71,32 @@ public class ClientQueryBuilderSqlServerTest
         Assert.Equal(sql, expected);
     }
 
-    [Fact]
-    public void BuildCountSqlTest()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void BuildCountSqlTest(bool includeName)
     {
         var queryBuilder = new ClientQueryBuilderSqlServer();
-        var sql = queryBuilder.BuildCountSql();
+        var sql = queryBuilder.BuildCountSql(includeName);
 
-        var expected = "SELECT COUNT(*) FROM clients;";
+        var expected = includeName ?
+            "SELECT COUNT(*) FROM clients WHERE LOWER(name) LIKE LOWER(@Name);" :
+            "SELECT COUNT(*) FROM clients;";
 
         Assert.Equal(sql, expected);
     }
 
-    [Fact]
-    public void BuildPaginateSqlTest()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void BuildPaginateSqlTest(bool includeName)
     {
         var queryBuilder = new ClientQueryBuilderSqlServer();
-        var sql = queryBuilder.BuildPaginateSql();
+        var sql = queryBuilder.BuildPaginateSql(includeName);
 
-        var expected = "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, a.date, b.score FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id) ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+        var expected = includeName ?
+            "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, a.date, b.score FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id) WHERE LOWER(name) LIKE LOWER(@Name) ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;" :
+            "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, a.date, b.score FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id) ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
 
         Assert.Equal(sql, expected);
     }

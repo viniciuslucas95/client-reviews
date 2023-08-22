@@ -44,14 +44,14 @@ public class ClientService : IClientService
         await _repository.DeleteAsync(id);
     }
 
-    public async Task<PaginatedDto<PaginatedClientDto>> GetPaginatedAsync(int offset = 0)
+    public async Task<PaginatedDto<PaginatedClientDto>> GetPaginatedAsync(int offset = 0, string? name = null)
     {
-        return await _repository.GetPaginatedAsync(offset);
+        return await _repository.GetPaginatedAsync(offset, GetValidatedName(name));
     }
 
-    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> GetPaginatedForReviewCreationAsync(int offset = 0)
+    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> GetPaginatedForReviewCreationAsync(int offset = 0, string? name = null)
     {
-        return await _repository.GetPaginatedForReviewCreationAsync(offset);
+        return await _repository.GetPaginatedForReviewCreationAsync(offset, GetValidatedName(name));
     }
 
     public async Task<GetClientDto?> GetAsync(int id)
@@ -64,6 +64,23 @@ public class ClientService : IClientService
         }
 
         return result;
+    }
+
+    private string? GetValidatedName(string? name)
+    {
+        string? validatedName = null;
+
+        if (name is not null)
+        {
+            validatedName = "%" + name.Trim() + "%";
+
+            if (validatedName == "")
+            {
+                validatedName = null;
+            }
+        }
+
+        return validatedName;
     }
 
     private async Task ValidatePropsAsync(string name, string contactName, DateTime date, string? cnpj, int? id = null)

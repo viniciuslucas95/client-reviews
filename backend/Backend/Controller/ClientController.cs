@@ -21,27 +21,27 @@ public class ClientController : ControllerBase
     [HttpGet("review-creation")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
-    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> PaginateReviewCreation([FromQuery] int offset = 0)
+    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> PaginateReviewCreation([FromQuery] int offset = 0, [FromQuery] string? name = null)
     {
         if (offset < 0)
         {
             throw new BadRequestException("Invalid type", "Offset cannot be lower than 0");
         }
 
-        return await _service.GetPaginatedForReviewCreationAsync(offset);
+        return await _service.GetPaginatedForReviewCreationAsync(offset, name);
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
-    public async Task<PaginatedDto<PaginatedClientDto>> Paginate([FromQuery] int offset = 0)
+    public async Task<PaginatedDto<PaginatedClientDto>> Paginate([FromQuery] int offset = 0, [FromQuery] string? name = null)
     {
         if (offset < 0)
         {
             throw new BadRequestException("Invalid type", "Offset cannot be lower than 0");
         }
 
-        return await _service.GetPaginatedAsync(offset);
+        return await _service.GetPaginatedAsync(offset, name);
     }
 
     [HttpGet("{id}")]

@@ -85,17 +85,17 @@ public class ClientRepository : RepositoryBase<IClientQueryBuilder>, IClientRepo
         });
     }
 
-    public async Task<PaginatedDto<PaginatedClientDto>> GetPaginatedAsync(int offset = 0)
+    public async Task<PaginatedDto<PaginatedClientDto>> GetPaginatedAsync(int offset = 0, string? name = null)
     {
         return await Database.WithConnectionAsync(async connection =>
         {
-            var countSql = QueryBuilder.BuildCountSql();
+            var countSql = QueryBuilder.BuildCountSql(name is not null);
 
-            var countResult = await connection.QueryAsync<int>(countSql);
+            var countResult = await connection.QueryAsync<int>(countSql, new { Name = name });
 
-            var paginteSql = QueryBuilder.BuildPaginateSql();
+            var paginteSql = QueryBuilder.BuildPaginateSql(name is not null);
 
-            var items = await connection.QueryAsync<PaginatedClientDto>(paginteSql, new { Offset = offset });
+            var items = await connection.QueryAsync<PaginatedClientDto>(paginteSql, new { Offset = offset, Name = name });
 
             return new PaginatedDto<PaginatedClientDto>
             {
@@ -105,17 +105,17 @@ public class ClientRepository : RepositoryBase<IClientQueryBuilder>, IClientRepo
         });
     }
 
-    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> GetPaginatedForReviewCreationAsync(int offset = 0)
+    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> GetPaginatedForReviewCreationAsync(int offset = 0, string? name = null)
     {
         return await Database.WithConnectionAsync(async connection =>
         {
-            var countSql = QueryBuilder.BuildCountSql();
+            var countSql = QueryBuilder.BuildCountSql(name is not null);
 
-            var countResult = await connection.QueryAsync<int>(countSql);
+            var countResult = await connection.QueryAsync<int>(countSql, new { Name = name });
 
-            var paginteSql = QueryBuilder.BuildPaginateForReviewCreationSql();
+            var paginteSql = QueryBuilder.BuildPaginateForReviewCreationSql(name is not null);
 
-            var items = await connection.QueryAsync<PaginatedClientReviewCreationDto>(paginteSql, new { Offset = offset });
+            var items = await connection.QueryAsync<PaginatedClientReviewCreationDto>(paginteSql, new { Offset = offset, Name = name });
 
             return new PaginatedDto<PaginatedClientReviewCreationDto>
             {

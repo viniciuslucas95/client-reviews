@@ -68,14 +68,32 @@ public class ClientQueryBuilderSqlServer : IClientQueryBuilder
         return "DELETE FROM clients WHERE id = @Id;";
     }
 
-    public string BuildCountSql()
+    public string BuildCountSql(bool includeName)
     {
-        return "SELECT COUNT(*) FROM clients;";
+        var sql = "SELECT COUNT(*) FROM clients";
+
+        if (includeName)
+        {
+            sql += " WHERE LOWER(name) LIKE LOWER(@Name)";
+        }
+
+        sql += ";";
+
+        return sql;
     }
 
-    public string BuildPaginateSql()
+    public string BuildPaginateSql(bool includeName)
     {
-        return "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, a.date, b.score FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id) ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+        var sql = "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, a.date, b.score FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id)";
+
+        if (includeName)
+        {
+            sql += " WHERE LOWER(name) LIKE LOWER(@Name)";
+        }
+
+        sql += " ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+
+        return sql;
     }
 
     public string BuildGetSql()
@@ -83,8 +101,17 @@ public class ClientQueryBuilderSqlServer : IClientQueryBuilder
         return "SELECT *, contact_name AS \"ContactName\" FROM clients WHERE Id = @Id;";
     }
 
-    public string BuildPaginateForReviewCreationSql()
+    public string BuildPaginateForReviewCreationSql(bool includeName)
     {
-        return "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, b.date as \"LastReviewDate\" FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id) ORDER BY name OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+        var sql = "SELECT a.id, a.\"name\", a.contact_name as \"ContactName\", a.cnpj, b.date as \"LastReviewDate\" FROM clients AS a LEFT JOIN client_reviews AS b ON a.id = b.client_id AND b.date = (SELECT MAX(date) FROM client_reviews WHERE client_id = a.id) ORDER BY name";
+
+        if (includeName)
+        {
+            sql += " WHERE LOWER(name) LIKE LOWER(@Name)";
+        }
+
+        sql += " OFFSET @Offset ROWS FETCH NEXT 10 ROWS ONLY;";
+
+        return sql;
     }
 }
