@@ -10,9 +10,15 @@
     </form>
 
     <form class="d-flex flex-grow-1 me-2" role="search">
-        <input class="form-control me-2" type="search" placeholder="Digite o nome do cliente" aria-label="Search">
+        <input class="form-control me-2"
+               type="search"
+               placeholder="Digite o nome do cliente"
+               aria-label="Search"
+               id="name"
+               name="name"
+               [(ngModel)]="formData.name">
 
-        <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+        <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
     </form>
 
     <button class="btn btn-primary" type="button" (click)="onCreateReview()">Criar</button>

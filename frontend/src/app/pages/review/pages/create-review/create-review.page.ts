@@ -18,8 +18,10 @@ import ReviewService from "../../review.service";
 export class CreateReviewPage {
   public formData = {
     month: (new Date().getMonth() + 1).toString(),
-    year: new Date().getFullYear().toString()
+    year: new Date().getFullYear().toString(),
+    name: ''
   }
+
   public tableContent:TableContent<ClientReviewCreationTableContentItem> = {
     total: 0,
     items: [],
@@ -46,6 +48,8 @@ export class CreateReviewPage {
       }
     ]
   }
+
+  public appliedFilter?: string
   public page = 1
   private reviews: {
     id: number | string,
@@ -64,9 +68,10 @@ export class CreateReviewPage {
   }
 
   onPageChanged(page:number){
+    this.page = page
     const offset = (page - 1) * 10
 
-    this._clientService.getPaginatedForReviewCreation(offset).subscribe(res => {
+    this._clientService.getPaginatedForReviewCreation(offset, this.appliedFilter).subscribe(res => {
       this.tableContent = {
         ...this.tableContent,
         total: res.count,
@@ -117,6 +122,12 @@ export class CreateReviewPage {
     this.reviews = this.reviews.filter(item => item.id != id)
 
     this.updateClientsButtons()
+  }
+
+  onApplyFilter(){
+    this.appliedFilter = this.formData.name
+
+    this.onPageChanged(this.page)
   }
 
   onNewClientReview(id: number | string){
