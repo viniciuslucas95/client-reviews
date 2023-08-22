@@ -55,9 +55,7 @@ public class ClientRepository : RepositoryBase<IClientQueryBuilder>, IClientRepo
 
             var results = await connection.QueryAsync<int>(sql, new { Cnpj = cnpj, Id = excludeId });
 
-            var found = results.Any();
-
-            return found;
+            return results.Any();
         });
     }
 

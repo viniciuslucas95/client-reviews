@@ -31,6 +31,14 @@ public class ClientReviewController : ControllerBase
         return await _service.GetPaginatedAsync(offset);
     }
 
+    [HttpGet("date-availability")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
+    public async Task<bool> GetDateAvailability([FromQuery] DateTime date)
+    {
+        return await _service.IsDateAlreadyRegisteredAsync(date);
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     public async Task Post([FromBody] IEnumerable<CreateClientReviewDto> dtos)

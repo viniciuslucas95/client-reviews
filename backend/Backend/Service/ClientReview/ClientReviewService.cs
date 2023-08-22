@@ -22,4 +22,9 @@ public class ClientReviewService : IClientReviewService
     {
         return await _repository.GetPaginatedAsync(offset);
     }
+
+    public async Task<bool> IsDateAlreadyRegisteredAsync(DateTime date)
+    {
+        return await _repository.IsDateAlreadyRegisteredAsync(date);
+    }
 }

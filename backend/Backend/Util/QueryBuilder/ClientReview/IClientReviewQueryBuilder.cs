@@ -11,4 +11,8 @@ public interface IClientReviewQueryBuilder
     /// </summary>
     public string BuildPaginateSql();
     public string BuildCountSql();
+    /// <summary>
+    /// Parameters: <b>Date</b>
+    /// </summary>
+    public string BuildIsDateAlreadyRegisteredSql();
 }

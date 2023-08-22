@@ -41,4 +41,16 @@ public class ClientReviewRepository : RepositoryBase<IClientReviewQueryBuilder>,
             };
         });
     }
+
+    public async Task<bool> IsDateAlreadyRegisteredAsync(DateTime date)
+    {
+        return await Database.WithConnectionAsync(async connection =>
+        {
+            var sql = QueryBuilder.BuildIsDateAlreadyRegisteredSql();
+
+            var result = await connection.QueryAsync<int>(sql, new { Date = date });
+
+            return result.Any();
+        });
+    }
 }

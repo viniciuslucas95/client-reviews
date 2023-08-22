@@ -16,4 +16,9 @@ public class ClientReviewQueryBuilderSqlServer : IClientReviewQueryBuilder
     {
         return "WITH GroupedReviews AS (SELECT date AS Date, COUNT(*) as Total, SUM(CASE WHEN score >= 9 THEN 1 ELSE 0 END) AS Promotores, SUM(CASE WHEN score >= 7 AND score < 9 THEN 1 ELSE 0 END) AS Neutros, SUM(CASE WHEN score <= 7 THEN 1 ELSE 0 END) AS Detratores FROM client_reviews GROUP BY Date) SELECT COUNT(*) FROM GroupedReviews;";
     }
+
+    public string BuildIsDateAlreadyRegisteredSql()
+    {
+        return "SELECT TOP 1 1 FROM client_reviews WHERE date = @Date;";
+    }
 }
