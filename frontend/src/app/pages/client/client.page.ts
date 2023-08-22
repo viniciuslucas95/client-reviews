@@ -66,30 +66,41 @@ export class ClientPage implements OnInit {
   }
 
   ngOnInit(){
-    const pageString = this._activatedRoute.snapshot.paramMap.get('page');
+    this._activatedRoute.queryParams.subscribe(params => {
+      const name = params['name'];
 
-    if(!pageString)  return
+      if(name) this.appliedFilter = name
 
-    const page = parseInt(pageString)
+      const pageString = this._activatedRoute.snapshot.paramMap.get('page');
 
-    if(isNaN(page)) return
+      if(!pageString)  return
 
-    if(page < 1) return
+      const page = parseInt(pageString)
 
-    this.page = page
+      if(isNaN(page)) return
 
-    this.onPageChanged(this.page)
+      if(page < 1) return
+
+      this.page = page
+
+      this.onPageChanged(this.page)
+    })
   }
 
   onPageChanged(page:number){
     this.page = page
-    this._router.navigate([`/clientes/${page}`])
+    this._router.navigate([`/clientes/${page}`], this.appliedFilter !== '' ?
+        {
+          queryParams: {
+            name: this.appliedFilter
+          }
+        } : undefined)
 
     const offset = (page - 1) * 10
 
     this._service.getPaginated(offset, this.appliedFilter).subscribe(res => {
       if(res.items.length === 0 && location.pathname !== '/clientes/1'){
-        location.replace('/clientes/1')
+        this.onPageChanged(1)
         return
       }
 
