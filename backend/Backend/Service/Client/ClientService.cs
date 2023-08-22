@@ -3,6 +3,7 @@ using Backend.DTO.Client;
 using Backend.Exception;
 using Backend.Repository.Client;
 using Backend.Util.Extension;
+using System.Text.RegularExpressions;
 
 namespace Backend.Service.Client;
 
@@ -19,7 +20,7 @@ public class ClientService : IClientService
     {
         await ValidatePropsAsync(name, contactName, date, cnpj);
 
-        return await _repository.CreateAsync(name, contactName, date, cnpj);
+        return await _repository.CreateAsync(name.Trim(), contactName.Trim(), date, cnpj is not null ? cnpj.Trim() : cnpj);
     }
 
     public async Task UpdateAsync(int id, string name, string contactName, DateTime date, string? cnpj)
@@ -31,7 +32,7 @@ public class ClientService : IClientService
 
         await ValidatePropsAsync(name, contactName, date, cnpj, id);
 
-        await _repository.UpdateAsync(id, name, contactName, date, cnpj);
+        await _repository.UpdateAsync(id, name.Trim(), contactName.Trim(), date, cnpj is not null ? cnpj.Trim() : cnpj);
     }
 
     public async Task DeleteAsync(int id)
@@ -100,6 +101,15 @@ public class ClientService : IClientService
             if (!cnpj.HasNonWhitespaceCharacters())
             {
                 throw new EmptyStringException("Client cnpj cannot be empty");
+            }
+
+            var regexPattern = "^[0-9]{14}$";
+
+            bool isValid = Regex.IsMatch(cnpj.Trim(), regexPattern);
+
+            if (!isValid)
+            {
+                throw new InvalidTypeException("Invalid cnpj", "Cnpj must be exactly 14 numbers");
             }
 
             var isCnpjAlreadyRegistered = id is not null ?
