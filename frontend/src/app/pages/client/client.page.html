@@ -1,19 +1,21 @@
-<app-header>
-    <form class="d-flex flex-grow-1 me-2" role="search" [formGroup]="formGroup">
-        <input class="form-control me-2"
-               type="search"
-               placeholder="Digite o nome do cliente"
-               aria-label="Search"
-               id="name"
-               name="name"
-               formControlName="name">
-
-        <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
-    </form>
-
-    <button class="btn btn-primary" type="button" (click)="onCreateClient()">Novo</button>
-</app-header>
-
 <app-page-container>
+    <h2 class="mb-4">Clientes</h2>
+
+    <div class="d-flex mb-4">
+        <form class="d-flex flex-grow-1 me-2" role="search" [formGroup]="formGroup">
+            <input class="form-control me-2"
+                   type="search"
+                   placeholder="Digite o nome do cliente"
+                   aria-label="Search"
+                   id="name"
+                   name="name"
+                   formControlName="name">
+
+            <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
+        </form>
+
+        <button class="btn btn-primary" type="button" (click)="onCreateClient()">Novo</button>
+    </div>
+
     <app-table [content]="tableContent" [onPageChanged]="onPageChanged.bind(this)" [page]="page"></app-table>
 </app-page-container>

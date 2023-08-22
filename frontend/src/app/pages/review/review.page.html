@@ -1,9 +1,11 @@
-<app-header>
-    <div class="flex-grow-1"></div>
-
-    <button class="btn btn-primary" type="button" (click)="onCreateReview()">Novo</button>
-</app-header>
-
 <app-page-container>
+    <div class="d-flex mb-2 justify-content-center">
+        <h2 class="flex-grow-1">Avaliações</h2>
+
+        <div>
+            <button class="btn btn-primary" type="button" (click)="onCreateReview()">Novo</button>
+        </div>
+    </div>
+
     <app-table [content]="tableContent" [onPageChanged]="onTablePageChanged.bind(this)" [page]="page"></app-table>
 </app-page-container>

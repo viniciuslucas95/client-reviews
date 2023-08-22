@@ -1,42 +1,44 @@
-<app-header>
-    <form class="date-form-container position-relative" [formGroup]="formGroup">
-        <input
-                formControlName="date"
-                placeholder="Mês/Ano"
-                type="text"
-                class="form-control me-2"
-                id="date"
-                name="date">
-
-        <div *ngIf="showAlreadyRegisteredDate()" class="input-error invalid-date-error">
-            <span>Data já registrada</span>
-        </div>
-
-        <div *ngIf="formGroup.get('date')!.touched && !isDateValid() && !showAlreadyRegisteredDate()"
-             class="input-error invalid-date-error">
-            <span>Insira uma data válida</span>
-        </div>
-    </form>
-
-    <form class="d-flex flex-grow-1 me-2" role="search" [formGroup]="formGroup">
-        <input
-                formControlName="name"
-                class="form-control me-2"
-                type="search"
-                placeholder="Digite o nome do cliente"
-                aria-label="Search"
-                id="name"
-                name="name">
-
-        <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
-    </form>
-
-    <button
-            [ngClass]="isCreating ? 'btn btn-primary disabled' : 'btn btn-primary'"
-            type="button"
-            (click)="onCreateReview()">Criar</button>
-</app-header>
-
 <app-page-container>
+    <h2 class="mb-4">Criação de Avaliação</h2>
+
+    <div class="d-flex mb-4">
+        <form class="date-form-container position-relative" [formGroup]="formGroup">
+            <input
+                    formControlName="date"
+                    placeholder="Mês/Ano"
+                    type="text"
+                    class="form-control me-2"
+                    id="date"
+                    name="date">
+
+            <div *ngIf="showAlreadyRegisteredDate()" class="input-error invalid-date-error">
+                <span>Data já registrada</span>
+            </div>
+
+            <div *ngIf="formGroup.get('date')!.touched && !isDateValid() && !showAlreadyRegisteredDate()"
+                 class="input-error invalid-date-error">
+                <span>Insira uma data válida</span>
+            </div>
+        </form>
+
+        <form class="d-flex flex-grow-1 me-2" role="search" [formGroup]="formGroup">
+            <input
+                    formControlName="name"
+                    class="form-control me-2"
+                    type="search"
+                    placeholder="Digite o nome do cliente"
+                    aria-label="Search"
+                    id="name"
+                    name="name">
+
+            <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
+        </form>
+
+        <button
+                [ngClass]="isCreating ? 'btn btn-primary disabled' : 'btn btn-primary'"
+                type="button"
+                (click)="onCreateReview()">Criar</button>
+    </div>
+
     <app-table [content]="tableContent" [onPageChanged]="onPageChanged.bind(this)" [page]="page"></app-table>
 </app-page-container>
