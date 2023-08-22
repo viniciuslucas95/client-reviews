@@ -1,3 +1,4 @@
+using Backend.DTO;
 using Backend.DTO.ClientReview;
 
 namespace Backend.Service.ClientReview;
@@ -5,4 +6,5 @@ namespace Backend.Service.ClientReview;
 public interface IClientReviewService
 {
     public Task CreateManyAsync(IEnumerable<CreateClientReviewDto> dtos);
+    public Task<PaginatedDto<PaginatedClientReviewDto>> GetPaginatedAsync(int offset = 0);
 }

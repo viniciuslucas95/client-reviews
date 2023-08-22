@@ -1,4 +1,6 @@
-﻿using Backend.DTO.ClientReview;
+﻿using Backend.DTO;
+using Backend.DTO.ClientReview;
+using Backend.Exception;
 using Backend.Service.ClientReview;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +16,19 @@ public class ClientReviewController : ControllerBase
     public ClientReviewController(IClientReviewService service)
     {
         _service = service;
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
+    public async Task<PaginatedDto<PaginatedClientReviewDto>> Paginate([FromQuery] int offset = 0)
+    {
+        if (offset < 0)
+        {
+            throw new BadRequestException("Invalid type", "Offset cannot be lower than 0");
+        }
+
+        return await _service.GetPaginatedAsync(offset);
     }
 
     [HttpPost]

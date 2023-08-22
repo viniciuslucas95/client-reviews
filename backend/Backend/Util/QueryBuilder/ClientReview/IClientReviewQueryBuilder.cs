@@ -6,4 +6,9 @@ public interface IClientReviewQueryBuilder
     /// Parameters: <b>ClientId</b>, <b>Score</b>, <b>Date</b> and <b>Reason</b>
     /// </summary>
     public string BuildCreateSql();
+    /// <summary>
+    /// Parameters: <b>Offset</b>
+    /// </summary>
+    public string BuildPaginateSql();
+    public string BuildCountSql();
 }
