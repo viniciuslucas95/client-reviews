@@ -15,6 +15,12 @@ import CategoryUtil from "../../utils/category.util";
   styleUrls: ['./client.page.scss']
 })
 export class ClientPage implements OnInit {
+  public formData = {
+    name: ''
+  }
+
+  public appliedFilter?: string
+
   public tableContent:TableContent<ClientTableContentItem> = {
     total: 0,
     items: [],
@@ -49,7 +55,8 @@ export class ClientPage implements OnInit {
       private readonly _dateUtil: DateUtil,
       private readonly _categoryUtil: CategoryUtil,
       private readonly _modalService: NgbModal,
-      private readonly _activatedRoute: ActivatedRoute
+      private readonly _activatedRoute: ActivatedRoute,
+      private readonly _router: Router
   ) {
 
   }
@@ -70,14 +77,13 @@ export class ClientPage implements OnInit {
     this.onPageChanged(this.page)
   }
 
-  onTablePageChanged(page:number){
-    location.replace(`/clientes/${page}`)
-  }
-
   onPageChanged(page:number){
+    this.page = page
+    this._router.navigate([`/clientes/${page}`])
+
     const offset = (page - 1) * 10
 
-    this._service.getPaginated(offset).subscribe(res => {
+    this._service.getPaginated(offset, this.appliedFilter).subscribe(res => {
       if(res.items.length === 0 && location.pathname !== '/clientes/1'){
         location.replace('/clientes/1')
         return
@@ -95,6 +101,12 @@ export class ClientPage implements OnInit {
         }))
       }
     })
+  }
+
+  onApplyFilter(){
+    this.appliedFilter = this.formData.name
+
+    this.onPageChanged(this.page)
   }
 
   onCreateClient(){

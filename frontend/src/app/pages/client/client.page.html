@@ -1,13 +1,19 @@
 <app-header>
     <form class="d-flex flex-grow-1 me-2" role="search">
-        <input class="form-control me-2" type="search" placeholder="Digite o nome do cliente" aria-label="Search">
-        
-        <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+        <input class="form-control me-2"
+               type="search"
+               placeholder="Digite o nome do cliente"
+               aria-label="Search"
+               id="name"
+               name="name"
+               [(ngModel)]="formData.name">
+
+        <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
     </form>
 
     <button class="btn btn-primary" type="button" (click)="onCreateClient()">Novo</button>
 </app-header>
 
 <app-page-container>
-    <app-table [content]="tableContent" [onPageChanged]="onTablePageChanged.bind(this)" [page]="page"></app-table>
+    <app-table [content]="tableContent" [onPageChanged]="onPageChanged.bind(this)" [page]="page"></app-table>
 </app-page-container>

@@ -13,8 +13,12 @@ export default class ClientService extends ServiceBase{
         super("clients", httpClient);
     }
 
-    getPaginated(offset = 0){
-        return this.httpClient.get<PaginatedDto<PaginatedClientDto>>(this.baseUrl + `?offset=${offset.toString()}`)
+    getPaginated(offset = 0, name?: string ){
+        let url = this.baseUrl + `?offset=${offset.toString()}`
+
+        if(name) url += `&name=${name}`
+
+        return this.httpClient.get<PaginatedDto<PaginatedClientDto>>(url)
     }
 
     getPaginatedForReviewCreation(offset = 0){
