@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-create-review-modal',
@@ -7,10 +8,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./create-review-modal.component.scss']
 })
 export class CreateReviewModalComponent {
-  public formData = {
-    score: '',
-    reason: ''
-  }
+  public formGroup: FormGroup
 
   public client!: {
     id: number,
@@ -18,12 +16,53 @@ export class CreateReviewModalComponent {
   }
 
   constructor(
+      formBuilder: FormBuilder,
       private readonly _activeModal: NgbActiveModal
   ) {
+    this.formGroup = formBuilder.group({
+      score: ['', Validators.required],
+      reason: ['', Validators.required]
+    })
+  }
 
+  isScoreValid(){
+    const value = this.formGroup.get('score')!.value
+
+    if(value.includes('.') || value.includes(',')) return false
+
+    const parsedValue = parseInt(value.trim())
+
+    if(isNaN(parsedValue)) return false
+
+    if(parsedValue < 0 || parsedValue > 10) return false
+
+    return true
+  }
+
+  isReasonValid(){
+    const value = this.formGroup.get('reason')!.value
+
+    const length = value.trim().length
+
+    return length > 0
+  }
+
+  isFormValid(){
+    if(!this.formGroup.valid) return false
+    if(!this.isScoreValid()) return false
+    if(!this.isReasonValid()) return false
+
+    return true
   }
 
   onConfirm(){
-    this._activeModal.close({...this.formData})
+    if(this.isFormValid()){
+      this._activeModal.close({
+        score: parseInt(this.formGroup.get('score')!.value),
+        reason: this.formGroup.get('reason')!.value
+      })
+    }else{
+      this.formGroup.markAllAsTouched()
+    }
   }
 }

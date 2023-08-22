@@ -1,22 +1,27 @@
 <app-header>
-    <form class="date-form-container">
-        <div class="me-2">
-            <input placeholder="Ano" type="text" class="form-control" id="year" name="year" [(ngModel)]="formData.year">
-        </div>
+    <form class="date-form-container position-relative" [formGroup]="formGroup">
+        <input
+                formControlName="date"
+                placeholder="Mês/Ano"
+                type="text"
+                class="form-control me-2"
+                id="date"
+                name="date">
 
-        <div class="me-2">
-            <input placeholder="Mês" type="text" class="form-control" id="month" name="month" [(ngModel)]="formData.month">
+        <div *ngIf="formGroup.get('date')!.touched && !isDateValid()" class="input-error invalid-date-error">
+            <span>Insira uma data válida</span>
         </div>
     </form>
 
-    <form class="d-flex flex-grow-1 me-2" role="search">
-        <input class="form-control me-2"
-               type="search"
-               placeholder="Digite o nome do cliente"
-               aria-label="Search"
-               id="name"
-               name="name"
-               [(ngModel)]="formData.name">
+    <form class="d-flex flex-grow-1 me-2" role="search" [formGroup]="formGroup">
+        <input
+                formControlName="name"
+                class="form-control me-2"
+                type="search"
+                placeholder="Digite o nome do cliente"
+                aria-label="Search"
+                id="name"
+                name="name">
 
         <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
     </form>

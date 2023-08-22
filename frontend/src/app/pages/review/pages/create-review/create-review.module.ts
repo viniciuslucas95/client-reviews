@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule} from "@angular/forms";
+import {CommonModule} from "@angular/common";
 
 import {CreateReviewPage} from "./create-review.page";
 import {ComponentsModule} from "../../../../components/components.module";
@@ -12,7 +13,7 @@ import {CreateReviewModalComponent} from "./components/create-review-modal/creat
     ],
     imports: [
         ComponentsModule,
-        FormsModule,
+        CommonModule,
         ReactiveFormsModule
     ]
 })

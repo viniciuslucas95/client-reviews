@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 import {TableContent} from "../../../../components/table/table.component.type";
 import {ClientReviewCreationTableContentItem} from "./create-review.dto";
@@ -16,11 +17,7 @@ import ReviewService from "../../review.service";
   styleUrls: ['./create-review.page.scss']
 })
 export class CreateReviewPage {
-  public formData = {
-    month: (new Date().getMonth() + 1).toString(),
-    year: new Date().getFullYear().toString(),
-    name: ''
-  }
+  public formGroup: FormGroup
 
   public tableContent:TableContent<ClientReviewCreationTableContentItem> = {
     total: 0,
@@ -58,12 +55,18 @@ export class CreateReviewPage {
   }[] = []
 
   constructor(
+      formBuilder: FormBuilder,
       private readonly _clientService: ClientService,
       private readonly _service: ReviewService,
       private readonly _dateUtil: DateUtil,
       private readonly _modalService: NgbModal,
       private readonly _router: Router
   ) {
+    this.formGroup = formBuilder.group({
+      date: [`${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear().toString()}`, Validators.required],
+      name: ''
+    })
+
     this.onPageChanged(this.page)
   }
 
@@ -125,7 +128,7 @@ export class CreateReviewPage {
   }
 
   onApplyFilter(){
-    this.appliedFilter = this.formData.name
+    this.appliedFilter = this.formGroup.get('name')!.value
 
     this.onPageChanged(this.page)
   }
@@ -155,15 +158,44 @@ export class CreateReviewPage {
         .catch(_ => {})
   }
 
-  onCreateReview(){
-    const dtos: CreateClientReviewDto[] = this.reviews.map(item => ({
-      clientId: typeof item.id === 'string' ? parseInt(item.id) : item.id,
-      score: item.score,
-      reason: item.reason,
-      date: `${this.formData.year}-${this.formData.month.padStart(2, '0')}-01T00:00:00.000Z`
-    }))
+  isDateValid(){
+    const value = this.formGroup.get('date')!.value
 
-    this._service.create(dtos).subscribe(_ =>
-        this._router.navigate(['avaliacoes/1']))
+    const [month, year] = value.split('/')
+
+    if(!year) return false
+
+    return !isNaN(Date.parse(`${year}-${month}-01`))
+  }
+
+  isFormValid(){
+    if(!this.formGroup.valid) return false
+    if(!this.isDateValid()) return false
+
+    return true
+  }
+
+  getFormattedDate(){
+    const value = this.formGroup.get('date')!.value
+
+    const [month, year] = value.split('/')
+
+    return `${year}-${month.padStart(2, '0')}-01T00:00:00.000Z`
+  }
+
+  onCreateReview(){
+    if(this.isFormValid()){
+      const dtos: CreateClientReviewDto[] = this.reviews.map(item => ({
+        clientId: typeof item.id === 'string' ? parseInt(item.id) : item.id,
+        score: item.score,
+        reason: item.reason,
+        date: this.getFormattedDate()
+      }))
+
+      this._service.create(dtos).subscribe(_ =>
+          this._router.navigate(['avaliacoes/1']))
+    }else{
+      this.formGroup.markAllAsTouched()
+    }
   }
 }

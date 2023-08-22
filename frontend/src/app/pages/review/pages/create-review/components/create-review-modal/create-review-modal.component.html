@@ -1,15 +1,37 @@
 <div class="input-group create-review-modal-container">
-    <form class="d-flex flex-column w-100">
+    <form class="d-flex flex-column w-100" [formGroup]="formGroup" (ngSubmit)="onConfirm()">
         <div class="mb-3">
             <label for="score" class="form-label">Pontuação</label>
-            <input placeholder="Nota do cliente (de 0 a 10)" type="text" class="form-control" id="score" name="score" [(ngModel)]="formData.score">
+
+            <input
+                    formControlName="score"
+                    placeholder="Nota do cliente (de 0 a 10)"
+                    type="text"
+                    class="form-control"
+                    id="score"
+                    name="score">
+
+            <div *ngIf="formGroup.get('score')!.touched && !isScoreValid()" class="input-error">
+                <span>Insira uma pontuação válida (0 a 10; apenas inteiros)</span>
+            </div>
         </div>
 
         <div class="mb-3">
             <label for="reason" class="form-label">Motivo</label>
-            <input placeholder="Explique o motivo da nota" type="text" class="form-control" id="reason" name="reason" [(ngModel)]="formData.reason">
+
+            <input
+                    formControlName="reason"
+                    placeholder="Explique o motivo da nota"
+                    type="text"
+                    class="form-control"
+                    id="reason"
+                    name="reason">
+
+            <div *ngIf="formGroup.get('reason')!.touched && !isReasonValid()" class="input-error">
+                <span>É necessário especificar o motivo da nota</span>
+            </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" (click)="onConfirm()">Adicionar Nota</button>
+        <button type="submit" class="btn btn-primary">Adicionar Nota</button>
     </form>
 </div>
