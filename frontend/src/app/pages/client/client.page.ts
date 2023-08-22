@@ -90,7 +90,7 @@ export class ClientPage implements OnInit {
           ...item,
           id: item.id.toString(),
           cnpj: item.cnpj ?? "Não informado",
-          date: this._dateUtil.formatToPtString(item.date),
+          date: this._dateUtil.formatToPtStringDayMonthAndYear(item.date),
           score: this._categoryUtil.get(item.score)
         }))
       }

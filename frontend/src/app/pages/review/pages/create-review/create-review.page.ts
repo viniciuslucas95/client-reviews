@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Router} from "@angular/router";
 
 import {TableContent} from "../../../../components/table/table.component.type";
 import {ClientReviewCreationTableContentItem} from "./create-review.dto";
 import ClientService from "../../../client/client.service";
 import DateUtil from "../../../../utils/date.util";
 import {CreateReviewModalComponent} from "./components/create-review-modal/create-review-modal.component";
+import {CreateClientReviewDto} from "../../review.dto";
+import ReviewService from "../../review.service";
 
 @Component({
   selector: 'app-create-review-page',
@@ -13,6 +16,10 @@ import {CreateReviewModalComponent} from "./components/create-review-modal/creat
   styleUrls: ['./create-review.page.scss']
 })
 export class CreateReviewPage {
+  public formData = {
+    month: (new Date().getMonth() + 1).toString(),
+    year: new Date().getFullYear().toString()
+  }
   public tableContent:TableContent<ClientReviewCreationTableContentItem> = {
     total: 0,
     items: [],
@@ -47,9 +54,11 @@ export class CreateReviewPage {
   }[] = []
 
   constructor(
-      private readonly _service: ClientService,
+      private readonly _clientService: ClientService,
+      private readonly _service: ReviewService,
       private readonly _dateUtil: DateUtil,
-      private readonly _modalService: NgbModal
+      private readonly _modalService: NgbModal,
+      private readonly _router: Router
   ) {
     this.onPageChanged(this.page)
   }
@@ -57,7 +66,7 @@ export class CreateReviewPage {
   onPageChanged(page:number){
     const offset = (page - 1) * 10
 
-    this._service.getPaginatedForReviewCreation(offset).subscribe(res => {
+    this._clientService.getPaginatedForReviewCreation(offset).subscribe(res => {
       this.tableContent = {
         ...this.tableContent,
         total: res.count,
@@ -76,7 +85,7 @@ export class CreateReviewPage {
 
   getDeleteButton(id: number | string){
     return {
-      class: 'btn btn-danger',
+      class: 'btn btn-danger btn-sm',
       iconClass: 'bi-x-lg',
       onClick: () => this.onDeleteClientReview(id)
     }
@@ -84,7 +93,7 @@ export class CreateReviewPage {
 
   getNewButton(id: number | string){
     return {
-      class: 'btn btn-primary',
+      class: 'btn btn-primary btn-sm',
       iconClass: 'bi-plus-lg',
       onClick: () => this.onNewClientReview(id)
     }
@@ -105,11 +114,7 @@ export class CreateReviewPage {
   }
 
   onDeleteClientReview(id: number | string){
-    console.log(this.reviews)
-
     this.reviews = this.reviews.filter(item => item.id != id)
-
-    console.log(this.reviews)
 
     this.updateClientsButtons()
   }
@@ -137,5 +142,17 @@ export class CreateReviewPage {
           this.updateClientsButtons()
         })
         .catch(_ => {})
+  }
+
+  onCreateReview(){
+    const dtos: CreateClientReviewDto[] = this.reviews.map(item => ({
+      clientId: typeof item.id === 'string' ? parseInt(item.id) : item.id,
+      score: item.score,
+      reason: item.reason,
+      date: `${this.formData.year}-${this.formData.month.padStart(2, '0')}-01T00:00:00.000Z`
+    }))
+
+    this._service.create(dtos).subscribe(_ =>
+        this._router.navigate(['avaliacoes/1']))
   }
 }

@@ -6,16 +6,16 @@ import {CreateReviewPage} from "./pages/review/pages/create-review/create-review
 
 const routes: Routes = [
   {
+    path: 'avaliacoes/criar',
+    component: CreateReviewPage
+  },
+  {
     path: 'clientes/:page',
     component: ClientPage
   },
   {
-    path: 'avaliacoes',
+    path: 'avaliacoes/:page',
     component: ReviewPage
-  },
-  {
-    path: 'avaliacoes/criar',
-    component: CreateReviewPage
   },
   {
     path: '**',

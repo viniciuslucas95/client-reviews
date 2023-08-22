@@ -1,8 +1,21 @@
 <app-header>
+    <form class="date-form-container">
+        <div class="me-2">
+            <input placeholder="Ano" type="text" class="form-control" id="year" name="year" [(ngModel)]="formData.year">
+        </div>
+
+        <div class="me-2">
+            <input placeholder="Mês" type="text" class="form-control" id="month" name="month" [(ngModel)]="formData.month">
+        </div>
+    </form>
+
     <form class="d-flex flex-grow-1 me-2" role="search">
         <input class="form-control me-2" type="search" placeholder="Digite o nome do cliente" aria-label="Search">
+
         <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
     </form>
+
+    <button class="btn btn-primary" type="button" (click)="onCreateReview()">Criar</button>
 </app-header>
 
 <app-page-container>
