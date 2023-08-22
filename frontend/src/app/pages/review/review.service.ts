@@ -20,4 +20,8 @@ export default class ReviewService extends ServiceBase{
     create(dtos: CreateClientReviewDto[]){
         return this.httpClient.post(this.baseUrl, dtos)
     }
+
+    isDateAlreadyRegistered(date: string){
+        return this.httpClient.get<boolean>(this.baseUrl + '/date-availability' + `?date=${date}`)
+    }
 }

@@ -46,8 +46,12 @@ export class CreateReviewPage {
     ]
   }
 
+  public alreadyRegisteredDate?: string
   public appliedFilter?: string
   public page = 1
+  public isCreating = false
+  public invalidDate?: string
+
   private reviews: {
     id: number | string,
     score: number,
@@ -166,6 +170,8 @@ export class CreateReviewPage {
   isDateValid(){
     const value = this.formGroup.get('date')!.value
 
+    if(value === this.invalidDate) return false
+
     const [month, year] = value.split('/')
 
     if(!year) return false
@@ -180,6 +186,14 @@ export class CreateReviewPage {
     return true
   }
 
+  showAlreadyRegisteredDate(){
+    if(!this.isDateValid()) return false
+    if(!this.alreadyRegisteredDate) return false
+    if(this.getFormattedDate() !== this.alreadyRegisteredDate) return false
+
+    return true
+  }
+
   getFormattedDate(){
     const value = this.formGroup.get('date')!.value
 
@@ -190,15 +204,32 @@ export class CreateReviewPage {
 
   onCreateReview(){
     if(this.isFormValid()){
-      const dtos: CreateClientReviewDto[] = this.reviews.map(item => ({
-        clientId: typeof item.id === 'string' ? parseInt(item.id) : item.id,
-        score: item.score,
-        reason: item.reason,
-        date: this.getFormattedDate()
-      }))
+      this.isCreating = true
 
-      this._service.create(dtos).subscribe(_ =>
-          this._router.navigate(['avaliacoes/1']))
+      this._service.isDateAlreadyRegistered(this.getFormattedDate())
+          .subscribe({
+            next: res => {
+              if(res) {
+                this.isCreating = false
+                this.alreadyRegisteredDate = this.getFormattedDate()
+                return
+              }
+
+              const dtos: CreateClientReviewDto[] = this.reviews.map(item => ({
+                clientId: typeof item.id === 'string' ? parseInt(item.id) : item.id,
+                score: item.score,
+                reason: item.reason,
+                date: this.getFormattedDate()
+              }))
+
+              this._service.create(dtos).subscribe(_ =>
+                  this._router.navigate(['avaliacoes/1']))
+            },
+            error: _ => {
+              this.isCreating = false
+              this.invalidDate = this.formGroup.get('date')!.value
+            }
+          })
     }else{
       this.formGroup.markAllAsTouched()
     }

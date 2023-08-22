@@ -8,7 +8,12 @@
                 id="date"
                 name="date">
 
-        <div *ngIf="formGroup.get('date')!.touched && !isDateValid()" class="input-error invalid-date-error">
+        <div *ngIf="showAlreadyRegisteredDate()" class="input-error invalid-date-error">
+            <span>Data já registrada</span>
+        </div>
+
+        <div *ngIf="formGroup.get('date')!.touched && !isDateValid() && !showAlreadyRegisteredDate()"
+             class="input-error invalid-date-error">
             <span>Insira uma data válida</span>
         </div>
     </form>
@@ -26,7 +31,10 @@
         <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
     </form>
 
-    <button class="btn btn-primary" type="button" (click)="onCreateReview()">Criar</button>
+    <button
+            [ngClass]="isCreating ? 'btn btn-primary disabled' : 'btn btn-primary'"
+            type="button"
+            (click)="onCreateReview()">Criar</button>
 </app-header>
 
 <app-page-container>
