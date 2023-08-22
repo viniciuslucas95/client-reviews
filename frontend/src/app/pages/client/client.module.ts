@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
-import {FormsModule} from "@angular/forms";
+import {ReactiveFormsModule} from "@angular/forms";
+import {CommonModule} from "@angular/common";
 
 import {ClientPage} from "./client.page";
 import {ComponentsModule} from "../../components/components.module";
@@ -12,7 +13,8 @@ import {CreateClientModalComponent} from "./components/create-client-modal/creat
     ],
     imports: [
         ComponentsModule,
-        FormsModule
+        CommonModule,
+        ReactiveFormsModule
     ]
 
 })

@@ -1,12 +1,12 @@
 <app-header>
-    <form class="d-flex flex-grow-1 me-2" role="search">
+    <form class="d-flex flex-grow-1 me-2" role="search" [formGroup]="formGroup">
         <input class="form-control me-2"
                type="search"
                placeholder="Digite o nome do cliente"
                aria-label="Search"
                id="name"
                name="name"
-               [(ngModel)]="formData.name">
+               formControlName="name">
 
         <button class="btn btn-outline-primary" type="submit" (click)="onApplyFilter()">Pesquisar</button>
     </form>

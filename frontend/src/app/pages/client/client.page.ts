@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 import {TableContent} from "../../components/table/table.component.type";
 import {ClientTableContentItem} from "./client.dto";
@@ -8,6 +9,7 @@ import ClientService from "./client.service";
 import DateUtil from "../../utils/date.util";
 import {CreateClientModalComponent} from "./components/create-client-modal/create-client-modal.component";
 import CategoryUtil from "../../utils/category.util";
+import CnpjUtil from "../../utils/cnpj.util";
 
 @Component({
   selector: 'app-client-page',
@@ -15,9 +17,7 @@ import CategoryUtil from "../../utils/category.util";
   styleUrls: ['./client.page.scss']
 })
 export class ClientPage implements OnInit {
-  public formData = {
-    name: ''
-  }
+  public formGroup: FormGroup
 
   public appliedFilter?: string
 
@@ -51,14 +51,18 @@ export class ClientPage implements OnInit {
   public page = 1
 
   constructor(
+      formBuilder: FormBuilder,
       private readonly _service: ClientService,
       private readonly _dateUtil: DateUtil,
       private readonly _categoryUtil: CategoryUtil,
       private readonly _modalService: NgbModal,
       private readonly _activatedRoute: ActivatedRoute,
-      private readonly _router: Router
+      private readonly _router: Router,
+      private readonly _cnpjUtil: CnpjUtil
   ) {
-
+    this.formGroup = formBuilder.group({
+      name: ''
+    })
   }
 
   ngOnInit(){
@@ -95,7 +99,7 @@ export class ClientPage implements OnInit {
         items: res.items.map(item => ({
           ...item,
           id: item.id.toString(),
-          cnpj: item.cnpj ?? "Não informado",
+          cnpj: item.cnpj ? this._cnpjUtil.format(item.cnpj) : "Não informado",
           date: this._dateUtil.formatToPtStringDayMonthAndYear(item.date),
           score: this._categoryUtil.get(item.score)
         }))
@@ -104,7 +108,7 @@ export class ClientPage implements OnInit {
   }
 
   onApplyFilter(){
-    this.appliedFilter = this.formData.name
+    this.appliedFilter = this.formGroup.get('name')!.value
 
     this.onPageChanged(this.page)
   }

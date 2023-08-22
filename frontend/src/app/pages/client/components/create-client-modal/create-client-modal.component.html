@@ -1,29 +1,73 @@
 <div class="input-group create-client-modal-container">
-    <form class="d-flex flex-column w-100">
+    <form class="d-flex flex-column w-100" [formGroup]="formGroup" (ngSubmit)="onConfirm()">
         <div class="d-flex justify-content-between">
             <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input placeholder="Nome do cliente" type="text" class="form-control" id="name" name="name" [(ngModel)]="formData.name">
+                <label for="name" class="form-label">Nome</label>
+
+                <input
+                        formControlName="name"
+                        placeholder="Nome do cliente"
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        name="name">
+
+                <div *ngIf="formGroup.get('name')!.touched && !isNameValid()" class="input-error">
+                    <span>Insira um nome válido</span>
+                </div>
             </div>
 
             <div class="mb-3">
                 <label for="contactName" class="form-label">Nome do Contato</label>
-                <input placeholder="Nome do contato" type="text" class="form-control" id="contactName" name="contactName" [(ngModel)]="formData.contactName">
+
+                <input
+                        placeholder="Nome do contato"
+                        type="text"
+                        class="form-control"
+                        id="contactName"
+                        name="contactName"
+                        formControlName="contactName">
+
+                <div *ngIf="formGroup.get('contactName')!.touched && !isContactNameValid()" class="input-error">
+                    <span>Insira um nome válido</span>
+                </div>
             </div>
         </div>
 
         <div class="d-flex justify-content-between">
             <div class="mb-3">
                 <label for="cnpj" class="form-label">Cnpj</label>
-                <input placeholder="Cnpj (opcional)" type="text" class="form-control" id="cnpj" name="cnpj" [(ngModel)]="formData.cnpj">
+
+                <input
+                        formControlName="cnpj"
+                        placeholder="Cnpj (Opcional)"
+                        type="text"
+                        class="form-control"
+                        id="cnpj"
+                        name="cnpj">
+
+                <div *ngIf="formGroup.get('cnpj')!.touched && !isCnpjValid()" class="input-error">
+                    <span>Insira um cnpj válido<br>(14 caracteres)</span>
+                </div>
             </div>
 
             <div class="mb-3">
                 <label for="date" class="form-label">Registrado Em</label>
-                <input placeholder="Data de registro" type="text" class="form-control" id="date" name="date" [(ngModel)]="formData.date">
+
+                <input
+                        formControlName="date"
+                        placeholder="Dia/Mês/Ano" 
+                        type="text"
+                        class="form-control"
+                        id="date"
+                        name="date">
+
+                <div *ngIf="formGroup.get('date')!.touched && !isDateValid()" class="input-error">
+                    <span>Insira uma data válida</span>
+                </div>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" (click)="onConfirm()">Criar</button>
+        <button type="submit" class="btn btn-primary">Criar</button>
     </form>
 </div>
