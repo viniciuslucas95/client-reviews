@@ -55,6 +55,13 @@ public class ClientService : IClientService
         return await _repository.GetPaginatedForReviewCreationAsync(offset, GetValidatedName(name));
     }
 
+    public async Task<bool> IsCnpjAlreadyRegisteredAsync(string cnpj)
+    {
+        await ValidateCnpjAsync(cnpj, null, false);
+
+        return await _repository.IsCnpjAlreadyRegisteredAsync(cnpj);
+    }
+
     public async Task<GetClientDto?> GetAsync(int id)
     {
         var result = await _repository.GetAsync(id);
@@ -84,6 +91,35 @@ public class ClientService : IClientService
         return validatedName;
     }
 
+    private async Task ValidateCnpjAsync(string cnpj, int? id = null, bool checkUniqueness = true)
+    {
+        if (!cnpj.HasNonWhitespaceCharacters())
+        {
+            throw new EmptyStringException("Client cnpj cannot be empty");
+        }
+
+        var regexPattern = "^[0-9]{14}$";
+
+        bool isValid = Regex.IsMatch(cnpj.Trim(), regexPattern);
+
+        if (!isValid)
+        {
+            throw new InvalidTypeException("Invalid cnpj", "Cnpj must be exactly 14 numbers");
+        }
+
+        if (checkUniqueness)
+        {
+            var isCnpjAlreadyRegistered = id is not null ?
+                        await _repository.IsCnpjAlreadyRegisteredAsync(cnpj, (int)id) :
+                        await _repository.IsCnpjAlreadyRegisteredAsync(cnpj);
+
+            if (isCnpjAlreadyRegistered)
+            {
+                throw new ConflictException("Cnpj conflict", "Cnpj already registered");
+            }
+        }
+    }
+
     private async Task ValidatePropsAsync(string name, string contactName, DateTime date, string? cnpj, int? id = null)
     {
         if (!name.HasNonWhitespaceCharacters())
@@ -98,28 +134,7 @@ public class ClientService : IClientService
 
         if (cnpj != null)
         {
-            if (!cnpj.HasNonWhitespaceCharacters())
-            {
-                throw new EmptyStringException("Client cnpj cannot be empty");
-            }
-
-            var regexPattern = "^[0-9]{14}$";
-
-            bool isValid = Regex.IsMatch(cnpj.Trim(), regexPattern);
-
-            if (!isValid)
-            {
-                throw new InvalidTypeException("Invalid cnpj", "Cnpj must be exactly 14 numbers");
-            }
-
-            var isCnpjAlreadyRegistered = id is not null ?
-                await _repository.IsCnpjAlreadyRegisteredAsync(cnpj, (int)id) :
-                await _repository.IsCnpjAlreadyRegisteredAsync(cnpj);
-
-            if (isCnpjAlreadyRegistered)
-            {
-                throw new ConflictException("Cnpj conflict", "Cnpj already registered");
-            }
+            await ValidateCnpjAsync(cnpj, id);
         }
     }
 }

@@ -44,6 +44,14 @@ public class ClientController : ControllerBase
         return await _service.GetPaginatedAsync(offset, name);
     }
 
+    [HttpGet("cnpj-availability")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status400BadRequest)]
+    public async Task<bool> GetCnpjAvailability([FromQuery] string cnpj)
+    {
+        return await _service.IsCnpjAlreadyRegisteredAsync(cnpj);
+    }
+
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(SwaggerException), StatusCodes.Status404NotFound)]
