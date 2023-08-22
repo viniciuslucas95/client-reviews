@@ -12,11 +12,13 @@ import {CreateClientDto} from "../../client.dto";
 })
 export class CreateClientModalComponent {
   public formGroup: FormGroup
+  public isCreating = false
+  public alreadyRegisteredCnpj?: string
 
   constructor(
       formBuilder: FormBuilder,
       private readonly _activeModal: NgbActiveModal,
-      private readonly _clientService:ClientService
+      private readonly _service: ClientService
   ) {
     this.formGroup = formBuilder.group({
       name: ['', Validators.required],
@@ -24,6 +26,15 @@ export class CreateClientModalComponent {
       date: ['', Validators.required],
       cnpj: ''
     })
+  }
+
+  showAlreadyRegisteredCnpj(){
+    const value = this.formGroup.get('cnpj')!.value
+
+    if(!this.alreadyRegisteredCnpj) return false
+    if(value !== this.alreadyRegisteredCnpj) return false
+
+    return true
   }
 
   isNameValid(){
@@ -44,6 +55,8 @@ export class CreateClientModalComponent {
 
   isCnpjValid(){
     const value = this.formGroup.get('cnpj')!.value
+
+    if(value === this.alreadyRegisteredCnpj) return false
 
     if(!value) return true
 
@@ -92,8 +105,23 @@ export class CreateClientModalComponent {
         cnpj: cnpj !== '' ? cnpj.trim() : undefined
       }
 
-      this._clientService.create(dto).subscribe(res =>
-          this._activeModal.close({...dto, id: res}))
+      this.isCreating = true
+
+      this._service.isCnpjAlreadyRegistered(cnpj).subscribe({
+        next: isCnpjAlreadyRegistered => {
+          if(isCnpjAlreadyRegistered){
+            this.isCreating = false
+            this.alreadyRegisteredCnpj = this.formGroup.get('cnpj')!.value
+            return
+          }
+
+          this._service.create(dto).subscribe({
+            next: id => this._activeModal.close({...dto, id}),
+            error: _ => this.isCreating = false
+          })
+        },
+        error: _ => this.isCreating = false
+      })
     }else{
       this.formGroup.markAllAsTouched()
     }

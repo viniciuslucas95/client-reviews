@@ -8,7 +8,7 @@ import {CreateClientDto, PaginatedClientDto, PaginatedClientForReviewCreationDto
 @Injectable({
     providedIn: 'root'
 })
-export default class ClientService extends ServiceBase{
+export default class ClientService extends ServiceBase {
     constructor(httpClient:HttpClient) {
         super("clients", httpClient);
     }
@@ -27,6 +27,10 @@ export default class ClientService extends ServiceBase{
         if(name) url += `&name=${name}`
 
         return this.httpClient.get<PaginatedDto<PaginatedClientForReviewCreationDto>>(url)
+    }
+
+    isCnpjAlreadyRegistered(cnpj: string){
+        return this.httpClient.get<boolean>(this.baseUrl + '/cnpj-availability' + `?cnpj=${cnpj}`)
     }
 
     create(dto:CreateClientDto){

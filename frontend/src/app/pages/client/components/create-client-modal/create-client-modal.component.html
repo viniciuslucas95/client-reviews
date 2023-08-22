@@ -46,7 +46,12 @@
                         id="cnpj"
                         name="cnpj">
 
-                <div *ngIf="formGroup.get('cnpj')!.touched && !isCnpjValid()" class="input-error">
+                <div *ngIf="showAlreadyRegisteredCnpj()" class="input-error invalid-date-error">
+                    <span>Cnpj já registrado</span>
+                </div>
+
+                <div *ngIf="formGroup.get('cnpj')!.touched && !isCnpjValid() && !showAlreadyRegisteredCnpj()"
+                     class="input-error invalid-date-error">
                     <span>Insira um cnpj válido<br>(14 caracteres)</span>
                 </div>
             </div>
@@ -56,7 +61,7 @@
 
                 <input
                         formControlName="date"
-                        placeholder="Dia/Mês/Ano" 
+                        placeholder="Dia/Mês/Ano"
                         type="text"
                         class="form-control"
                         id="date"
@@ -68,6 +73,6 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Criar</button>
+        <button type="submit" [ngClass]="isCreating ? 'btn btn-primary disabled' : 'btn btn-primary'">Criar</button>
     </form>
 </div>
