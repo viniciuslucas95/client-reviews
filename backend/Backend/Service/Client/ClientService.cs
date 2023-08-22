@@ -49,6 +49,11 @@ public class ClientService : IClientService
         return await _repository.GetPaginatedAsync(offset);
     }
 
+    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> GetPaginatedForReviewCreationAsync(int offset = 0)
+    {
+        return await _repository.GetPaginatedForReviewCreationAsync(offset);
+    }
+
     public async Task<GetClientDto?> GetAsync(int id)
     {
         var result = await _repository.GetAsync(id);

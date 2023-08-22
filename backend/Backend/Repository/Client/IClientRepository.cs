@@ -12,4 +12,5 @@ public interface IClientRepository
     public Task<bool> IsCnpjAlreadyRegisteredAsync(string cnpj, int? excludeId = null);
     public Task<PaginatedDto<PaginatedClientDto>> GetPaginatedAsync(int offset = 0);
     public Task<GetClientDto?> GetAsync(int id);
+    public Task<PaginatedDto<PaginatedClientReviewCreationDto>> GetPaginatedForReviewCreationAsync(int offset = 0);
 }

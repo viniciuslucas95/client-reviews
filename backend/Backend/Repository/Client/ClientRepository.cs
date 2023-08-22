@@ -105,6 +105,26 @@ public class ClientRepository : RepositoryBase<IClientQueryBuilder>, IClientRepo
         });
     }
 
+    public async Task<PaginatedDto<PaginatedClientReviewCreationDto>> GetPaginatedForReviewCreationAsync(int offset = 0)
+    {
+        return await Database.WithConnectionAsync(async connection =>
+        {
+            var countSql = QueryBuilder.BuildCountSql();
+
+            var countResult = await connection.QueryAsync<int>(countSql);
+
+            var paginteSql = QueryBuilder.BuildPaginateForReviewCreationSql();
+
+            var items = await connection.QueryAsync<PaginatedClientReviewCreationDto>(paginteSql, new { Offset = offset });
+
+            return new PaginatedDto<PaginatedClientReviewCreationDto>
+            {
+                Count = countResult.ToArray()[0],
+                Items = items
+            };
+        });
+    }
+
     public async Task<GetClientDto?> GetAsync(int id)
     {
         return await Database.WithConnectionAsync(async connection =>

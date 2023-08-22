@@ -35,4 +35,8 @@ public interface IClientQueryBuilder
     /// Parameters: <b>Id</b>
     /// </summary>
     public string BuildGetSql();
+    /// <summary>
+    /// Parameters: <b>Offset</b>
+    /// </summary>
+    public string BuildPaginateForReviewCreationSql();
 }
