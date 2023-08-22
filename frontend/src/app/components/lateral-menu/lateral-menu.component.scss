@@ -5,6 +5,29 @@
   height: 100vh;
 }
 
-.logo-margin{
-  margin-top: 5rem;
+.logo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4rem;
+  background-color: white;
+  margin: 1rem;
+  border-radius: 0.5rem;
+
+  img {
+    width: 90%;
+  }
+}
+
+.btn-lateral-menu {
+  border-radius: 0;
+  border: 0;
+}
+
+.btn-lateral-menu:hover {
+  background-color: var(--blue600);
+}
+
+.btn-lateral-menu-active {
+  background-color: var(--blue700);
 }

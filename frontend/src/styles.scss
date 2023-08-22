@@ -1,6 +1,12 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 @import "node_modules/bootstrap-icons/font/bootstrap-icons";
 
+:root {
+  --blue300: #6EA8FE;
+  --blue600: #0A58CA;
+  --blue700: #084298;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -14,6 +20,6 @@
   }
 }
 
-.bg-color-b7 {
-  background-color: $blue-700;
+.b-800 {
+  background-color: $blue-800;
 }
