@@ -28,7 +28,13 @@ export class CreateReviewModalComponent {
   isScoreValid(){
     const value = this.formGroup.get('score')!.value
 
-    if(value.includes('.') || value.includes(',')) return false
+    if(!value) return false
+
+    const scorePattern = /^[0-9]{1,2}$/
+
+    const isMatch = scorePattern.test(value.trim())
+
+    if(!isMatch) return false
 
     const parsedValue = parseInt(value.trim())
 
