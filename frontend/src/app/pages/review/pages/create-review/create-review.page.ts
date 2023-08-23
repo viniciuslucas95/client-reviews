@@ -79,7 +79,7 @@ export class CreateReviewPage {
     const offset = (page - 1) * 10
 
     this._clientService.getPaginatedForReviewCreation(offset, this.appliedFilter).subscribe(res => {
-      if(res.items.length === 0){
+      if(res.items.length === 0 && this.page !== 1){
         this.onPageChanged(1)
         return
       }
