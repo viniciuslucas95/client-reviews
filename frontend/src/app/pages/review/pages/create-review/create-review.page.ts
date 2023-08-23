@@ -176,6 +176,15 @@ export class CreateReviewPage {
 
     if(!year) return false
 
+    if(year.length !== 4) return false
+
+    const parsedMonth = parseInt(month)
+    const parsedYear = parseInt(year)
+
+    if(isNaN(parsedMonth) || isNaN(parsedYear)) return false
+
+    if(parsedYear < 1800) return false
+
     return !isNaN(Date.parse(`${year}-${month}-01`))
   }
 
