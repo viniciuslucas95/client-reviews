@@ -73,7 +73,9 @@ export class CreateClientModalComponent {
     if(!month) return false
     if(!year) return false
 
-    return !isNaN(Date.parse(`${year}-${month}-${day}`))
+    if(year.length !== 4) return false
+
+    return !isNaN(Date.parse(`${year}-${month.padStart(2, '0')}-${day}`))
   }
 
   isFormValid(){
