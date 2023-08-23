@@ -75,6 +75,14 @@ export class CreateClientModalComponent {
 
     if(year.length !== 4) return false
 
+    const parsedDay = parseInt(day)
+    const parsedMonth = parseInt(month)
+    const parsedYear = parseInt(year)
+
+    if(isNaN(parsedDay) || isNaN(parsedMonth) || isNaN(parsedYear)) return false
+
+    if(parsedYear < 1800) return false
+
     return !isNaN(Date.parse(`${year}-${month.padStart(2, '0')}-${day}`))
   }
 
