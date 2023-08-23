@@ -107,21 +107,29 @@ export class CreateClientModalComponent {
 
       this.isCreating = true
 
-      this._service.isCnpjAlreadyRegistered(cnpj).subscribe({
-        next: isCnpjAlreadyRegistered => {
-          if(isCnpjAlreadyRegistered){
-            this.isCreating = false
-            this.alreadyRegisteredCnpj = this.formGroup.get('cnpj')!.value
-            return
-          }
+      const createClient = () => {
+        this._service.create(dto).subscribe({
+          next: id => this._activeModal.close({...dto, id}),
+          error: _ => this.isCreating = false
+        })
+      }
 
-          this._service.create(dto).subscribe({
-            next: id => this._activeModal.close({...dto, id}),
-            error: _ => this.isCreating = false
-          })
-        },
-        error: _ => this.isCreating = false
-      })
+      if(dto.cnpj){
+        this._service.isCnpjAlreadyRegistered(cnpj).subscribe({
+          next: isCnpjAlreadyRegistered => {
+            if(isCnpjAlreadyRegistered){
+              this.isCreating = false
+              this.alreadyRegisteredCnpj = this.formGroup.get('cnpj')!.value
+              return
+            }
+
+            createClient()
+          },
+          error: _ => this.isCreating = false
+        })
+      }else{
+        createClient()
+      }
     }else{
       this.formGroup.markAllAsTouched()
     }
