@@ -3,6 +3,7 @@ using Backend.Repository.Client;
 using Backend.Repository.ClientReview;
 using Backend.Service.Client;
 using Backend.Service.ClientReview;
+using Backend.Util;
 using Backend.Util.QueryBuilder.Client;
 using Backend.Util.QueryBuilder.ClientReview;
 
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton(_ => new Database("Server=database;Database=dev;User Id=sa;Password=superADMIN123!@#;"));
+builder.Services.AddSingleton(_ => new Database(new ConnectionStringBuilderSqlServer().Build()));
 builder.Services.AddSingleton<IClientQueryBuilder, ClientQueryBuilderSqlServer>();
 builder.Services.AddSingleton<IClientRepository, ClientRepository>();
 builder.Services.AddSingleton<IClientService, ClientService>();
