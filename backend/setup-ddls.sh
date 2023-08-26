@@ -2,9 +2,9 @@
 
 sleep 30s
 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "superADMIN123!@#" -Q "CREATE DATABASE dev;"
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -Q "CREATE DATABASE $DATABASE_NAME;"
 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "superADMIN123!@#" -d dev -Q "
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -d $DATABASE_NAME -Q "
 CREATE TABLE clients (
     id INT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(128) NOT NULL,

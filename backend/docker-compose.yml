@@ -6,8 +6,13 @@ services:
     build:
       context: .
       dockerfile: Backend/Dockerfile
+    environment:
+      DATABASE_HOST: ${DATABASE_HOST:-database}
+      DATABASE_PORT: ${DATABASE_PORT:-1433}
+      DATABASE_NAME: ${DATABASE_NAME:-dev}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-superADMIN123!@#}
     ports:
-      - "3000:80"
+      - "${API_EXTERNAL_PORT:-3000}:80"
     container_name: cadastro-pesquisa-backend
     restart: always
 
@@ -16,10 +21,11 @@ services:
     container_name: cadastro-pesquisa-database
     restart: always
     environment:
-      SA_PASSWORD: superADMIN123!@#
+      SA_PASSWORD: ${DATABASE_PASSWORD:-superADMIN123!@#}
+      DATABASE_NAME: ${DATABASE_NAME:-dev}
       ACCEPT_EULA: Y
     ports:
-      - "1433:1433"
+      - "${DATABASE_EXTERNAL_PORT:-1433}:1433"
     volumes:
       - ./database:/var/opt/mssql/data
       - ./entrypoint.sh:/docker-entrypoint-initdb.d/entrypoint.sh
