@@ -4,11 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import ServiceBase from '../../base/service.base';
 import PaginatedDto from '../../dtos/paginated.dto';
 import { CreateClientReviewDto, PaginatedClientReviewDto } from './review.dto';
+import { IReviewService } from './review.interface';
 
-@Injectable({
-  providedIn: 'root',
-})
-export default class ReviewService extends ServiceBase {
+@Injectable()
+export default class ReviewService
+  extends ServiceBase
+  implements IReviewService
+{
   constructor(httpClient: HttpClient) {
     super('client-reviews', httpClient);
   }
@@ -20,7 +22,7 @@ export default class ReviewService extends ServiceBase {
   }
 
   create(dtos: CreateClientReviewDto[]) {
-    return this.httpClient.post(this.baseUrl, dtos);
+    return this.httpClient.post<void>(this.baseUrl, dtos);
   }
 
   isDateAlreadyRegistered(date: string) {

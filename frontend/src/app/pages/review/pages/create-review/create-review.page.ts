@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { TableContent } from '../../../../components/table/table.component.type';
 import { ClientReviewCreationTableContentItem } from './create-review.dto';
-import ClientService from '../../../client/client.service';
 import DateUtil from '../../../../utils/date.util';
 import { CreateReviewModalComponent } from './components/create-review-modal/create-review-modal.component';
 import { CreateClientReviewDto } from '../../review.dto';
-import ReviewService from '../../review.service';
+import injectable from '../../../../constants/injectable.constant';
+import { IClientService } from '../../../client/client.interface';
+import { IReviewService } from '../../review.interface';
 
 @Component({
   selector: 'app-create-review-page',
@@ -60,8 +61,10 @@ export class CreateReviewPage {
 
   constructor(
     formBuilder: FormBuilder,
-    private readonly _clientService: ClientService,
-    private readonly _service: ReviewService,
+    @Inject(injectable.clientService)
+    private readonly _clientService: IClientService,
+    @Inject(injectable.reviewService)
+    private readonly _service: IReviewService,
     private readonly _dateUtil: DateUtil,
     private readonly _modalService: NgbModal,
     private readonly _router: Router,
@@ -243,7 +246,7 @@ export class CreateReviewPage {
 
           this._service
             .create(dtos)
-            .subscribe((_) => this._router.navigate(['avaliacoes/1']));
+            .subscribe(() => this._router.navigate(['avaliacoes/1']));
         },
         error: (_) => {
           this.isCreating = false;

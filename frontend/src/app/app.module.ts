@@ -11,6 +11,7 @@ import { ComponentsModule } from './components/components.module';
 import { CreateReviewModule } from './pages/review/pages/create-review/create-review.module';
 import injectable from './constants/injectable.constant';
 import ClientService from './pages/client/client.service';
+import ReviewService from './pages/review/review.service';
 
 @NgModule({
   declarations: [AppComponent, LateralMenuComponent],
@@ -27,6 +28,10 @@ import ClientService from './pages/client/client.service';
     {
       provide: injectable.clientService,
       useClass: ClientService,
+    },
+    {
+      provide: injectable.reviewService,
+      useClass: ReviewService,
     },
   ],
   exports: [],

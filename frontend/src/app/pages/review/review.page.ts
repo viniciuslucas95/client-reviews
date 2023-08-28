@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TableContent } from '../../components/table/table.component.type';
 import { ClientReviewTableContentItem } from './review.dto';
 import DateUtil from '../../utils/date.util';
-import ReviewService from './review.service';
+import injectable from '../../constants/injectable.constant';
+import { IReviewService } from './review.interface';
 
 @Component({
   selector: 'app-review-page',
@@ -36,7 +37,8 @@ export class ReviewPage {
   constructor(
     private readonly _route: Router,
     private readonly _activatedRoute: ActivatedRoute,
-    private readonly _service: ReviewService,
+    @Inject(injectable.reviewService)
+    private readonly _service: IReviewService,
     private readonly _dateUtil: DateUtil,
   ) {}
 
