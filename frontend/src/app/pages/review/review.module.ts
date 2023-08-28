@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ReviewPage } from './review.page';
 import { ComponentsModule } from '../../components/components.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ReviewPage],
-  imports: [ComponentsModule, FormsModule, ReactiveFormsModule],
+  imports: [ComponentsModule, CommonModule, ReactiveFormsModule],
 })
 export class ReviewModule {}
