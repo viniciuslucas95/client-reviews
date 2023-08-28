@@ -123,7 +123,7 @@ export class CreateClientModalComponent {
       const createClient = () => {
         this._service.create(dto).subscribe({
           next: (id) => this._activeModal.close({ ...dto, id }),
-          error: (_) => (this.isCreating = false),
+          error: () => (this.isCreating = false),
         });
       };
 
@@ -138,7 +138,7 @@ export class CreateClientModalComponent {
 
             createClient();
           },
-          error: (_) => (this.isCreating = false),
+          error: () => (this.isCreating = false),
         });
       } else {
         createClient();

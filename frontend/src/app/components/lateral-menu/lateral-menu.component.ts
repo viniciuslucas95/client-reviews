@@ -15,7 +15,7 @@ export class LateralMenuComponent {
   constructor(router: Router) {
     router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((_) => {
+      .subscribe(() => {
         if (location.pathname.includes('clientes')) {
           this.activeRoute = 'clientes';
         } else {

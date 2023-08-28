@@ -133,6 +133,6 @@ export class ClientPage implements OnInit {
   onCreateClient() {
     const modalRef = this._modalService.open(CreateClientModalComponent);
 
-    modalRef.result.then(() => location.reload()).catch((_) => {});
+    modalRef.result.then(() => location.reload()).catch(() => undefined);
   }
 }

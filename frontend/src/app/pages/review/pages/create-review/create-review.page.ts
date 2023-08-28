@@ -178,7 +178,7 @@ export class CreateReviewPage {
 
         this.updateClientsButtons();
       })
-      .catch((_) => {});
+      .catch(() => undefined);
   }
 
   isDateValid() {
@@ -248,7 +248,7 @@ export class CreateReviewPage {
             .create(dtos)
             .subscribe(() => this._router.navigate(['avaliacoes/1']));
         },
-        error: (_) => {
+        error: () => {
           this.isCreating = false;
           this.invalidDate = this.formGroup.get('date')!.value;
         },
