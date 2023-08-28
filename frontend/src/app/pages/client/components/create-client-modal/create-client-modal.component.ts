@@ -4,13 +4,15 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { catchError, debounceTime, map, of } from 'rxjs';
 
 import { CreateClientDto } from '../../client.dto';
 import injectable from '../../../../constants/injectable.constant';
 import { IClientService } from '../../client.interface';
-import DateUtil from '../../../../utils/date.util';
+import FormValidatorUtil from '../../../../utils/form-validator.util';
 
 @Component({
   selector: 'app-create-client-modal',
@@ -20,77 +22,58 @@ import DateUtil from '../../../../utils/date.util';
 export class CreateClientModalComponent {
   public formGroup: FormGroup;
   public isCreating = false;
-  public alreadyRegisteredCnpj?: string;
 
   constructor(
     formBuilder: FormBuilder,
     private readonly _activeModal: NgbActiveModal,
     @Inject(injectable.clientService)
     private readonly _service: IClientService,
-    private readonly _dateUtil: DateUtil,
+    private readonly _formValidatorUtil: FormValidatorUtil,
   ) {
     this.formGroup = formBuilder.group({
-      name: ['', Validators.required],
-      contactName: ['', Validators.required],
+      name: ['', [Validators.required, this.validateText.bind(this)]],
+      contactName: ['', [Validators.required, this.validateText.bind(this)]],
       date: ['', [Validators.required, this.validateDate.bind(this)]],
-      cnpj: '',
+      cnpj: [
+        '',
+        this.validateCnpj.bind(this),
+        this.validateCnpjUniqueness.bind(this),
+      ],
     });
   }
 
+  validateText(control: FormControl) {
+    if (this._formValidatorUtil.validateText(control.value.trim())) return null;
+
+    return { invalid: true };
+  }
+
+  validateCnpjUniqueness(control: FormControl) {
+    const error: ValidationErrors = { conflict: true };
+
+    return this._service.isCnpjAlreadyRegistered(control.value.trim()).pipe(
+      debounceTime(300),
+      map((isCnpjAlreadyRegistered) =>
+        isCnpjAlreadyRegistered ? error : null,
+      ),
+      catchError(() => of(error)),
+    );
+  }
+
   validateDate(control: FormControl) {
-    if (this._dateUtil.isValid(control.value)) return null;
+    if (this._formValidatorUtil.validateDate(control.value.trim())) return null;
 
-    return { invalidDate: true };
+    return { invalid: true };
   }
 
-  showAlreadyRegisteredCnpj() {
-    const value = this.formGroup.get('cnpj')!.value;
+  validateCnpj(control: FormControl) {
+    if (this._formValidatorUtil.validateCnpj(control.value.trim())) return null;
 
-    if (!this.alreadyRegisteredCnpj) return false;
-    if (value !== this.alreadyRegisteredCnpj) return false;
-
-    return true;
-  }
-
-  isNameValid() {
-    const value = this.formGroup.get('name')!.value;
-
-    const length = value.replace(/\s/g, '').length;
-
-    return length > 0;
-  }
-
-  isContactNameValid() {
-    const value = this.formGroup.get('contactName')!.value;
-
-    const length = value.replace(/\s/g, '').length;
-
-    return length > 0;
-  }
-
-  isCnpjValid() {
-    const value = this.formGroup.get('cnpj')!.value;
-
-    if (value === this.alreadyRegisteredCnpj) return false;
-
-    if (!value) return true;
-
-    const cnpjRegex = /^[0-9]{14}$/;
-
-    return cnpjRegex.test(value.trim());
-  }
-
-  isFormValid() {
-    if (!this.formGroup.valid) return false;
-    if (!this.isCnpjValid()) return false;
-    if (!this.isNameValid()) return false;
-    if (!this.isContactNameValid()) return false;
-
-    return true;
+    return { invalid: true };
   }
 
   getFormattedDate() {
-    const value = this.formGroup.get('date')!.value;
+    const value = this.formGroup.get('date')!.value.trim();
 
     const [day, month, year] = value.split('/');
 
@@ -98,7 +81,7 @@ export class CreateClientModalComponent {
   }
 
   onConfirm() {
-    if (this.isFormValid()) {
+    if (this.formGroup.valid) {
       const cnpj = this.formGroup.get('cnpj')!.value;
 
       const dto: CreateClientDto = {
@@ -110,29 +93,10 @@ export class CreateClientModalComponent {
 
       this.isCreating = true;
 
-      const createClient = () => {
-        this._service.create(dto).subscribe({
-          next: (id) => this._activeModal.close({ ...dto, id }),
-          error: () => (this.isCreating = false),
-        });
-      };
-
-      if (dto.cnpj) {
-        this._service.isCnpjAlreadyRegistered(cnpj).subscribe({
-          next: (isCnpjAlreadyRegistered) => {
-            if (isCnpjAlreadyRegistered) {
-              this.isCreating = false;
-              this.alreadyRegisteredCnpj = this.formGroup.get('cnpj')!.value;
-              return;
-            }
-
-            createClient();
-          },
-          error: () => (this.isCreating = false),
-        });
-      } else {
-        createClient();
-      }
+      this._service.create(dto).subscribe({
+        next: (id) => this._activeModal.close({ ...dto, id }),
+        error: () => (this.isCreating = false),
+      });
     } else {
       this.formGroup.markAllAsTouched();
     }

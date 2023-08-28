@@ -12,7 +12,10 @@
                         id="name"
                         name="name">
 
-                <div *ngIf="formGroup.get('name')!.touched && !isNameValid()" class="input-error">
+                <div *ngIf="formGroup.get('name')!.touched &&
+                     formGroup.get('name')!.hasError('invalid')"
+                     class="input-error"
+                >
                     <span>Insira um nome válido</span>
                 </div>
             </div>
@@ -28,7 +31,10 @@
                         name="contactName"
                         formControlName="contactName">
 
-                <div *ngIf="formGroup.get('contactName')!.touched && !isContactNameValid()" class="input-error">
+                <div *ngIf="formGroup.get('contactName')!.touched &&
+                     formGroup.get('contactName')!.hasError('invalid')"
+                     class="input-error"
+                >
                     <span>Insira um nome válido</span>
                 </div>
             </div>
@@ -46,12 +52,15 @@
                         id="cnpj"
                         name="cnpj">
 
-                <div *ngIf="showAlreadyRegisteredCnpj()" class="input-error invalid-date-error">
+                <div *ngIf="formGroup.get('cnpj')!.hasError('conflict')"
+                     class="input-error invalid-date-error"
+                >
                     <span>Cnpj já registrado</span>
                 </div>
 
-                <div *ngIf="formGroup.get('cnpj')!.touched && !isCnpjValid() && !showAlreadyRegisteredCnpj()"
-                     class="input-error invalid-date-error">
+                <div *ngIf="formGroup.get('cnpj')!.touched && formGroup.get('cnpj')!.hasError('invalid')"
+                     class="input-error invalid-date-error"
+                >
                     <span>Insira um cnpj válido<br>(14 caracteres)</span>
                 </div>
             </div>
@@ -67,7 +76,7 @@
                         id="date"
                         name="date">
 
-                <div *ngIf="formGroup.get('date')!.touched && formGroup.get('date')!.hasError('invalidDate')"
+                <div *ngIf="formGroup.get('date')!.touched && formGroup.get('date')!.hasError('invalid')"
                      class="input-error"
                 >
                     <span>Insira uma data válida</span>
