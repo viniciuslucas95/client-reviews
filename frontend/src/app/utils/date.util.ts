@@ -46,12 +46,12 @@ export default class DateUtil {
     if (year.length !== 4 || month.length !== 2 || day.length !== 2)
       return false;
 
-    const dayAndMonthPattern = '/^[0-9]{2}$/';
-    const yearPattern = '/^[0-9]{4}$/';
+    const dayAndMonthPattern = new RegExp('^[0-9]{2}$');
+    const yearPattern = new RegExp('^[0-9]{4}$');
 
-    if (!day.test(dayAndMonthPattern)) return false;
-    if (!month.test(dayAndMonthPattern)) return false;
-    if (!year.test(yearPattern)) return false;
+    if (!dayAndMonthPattern.test(day)) return false;
+    if (!dayAndMonthPattern.test(month)) return false;
+    if (!yearPattern.test(year)) return false;
 
     const parsedDay = parseInt(day);
     const parsedMonth = parseInt(month);
