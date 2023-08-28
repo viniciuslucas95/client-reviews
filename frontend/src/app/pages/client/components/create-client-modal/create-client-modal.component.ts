@@ -1,13 +1,19 @@
 import { Component, Inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 import { CreateClientDto } from '../../client.dto';
 import injectable from '../../../../constants/injectable.constant';
 import { IClientService } from '../../client.interface';
+import DateUtil from '../../../../utils/date.util';
 
 @Component({
-  selector: 'app-create-review-modal',
+  selector: 'app-create-client-modal',
   templateUrl: './create-client-modal.component.html',
   styleUrls: ['./create-client-modal.component.scss'],
 })
@@ -21,13 +27,20 @@ export class CreateClientModalComponent {
     private readonly _activeModal: NgbActiveModal,
     @Inject(injectable.clientService)
     private readonly _service: IClientService,
+    private readonly _dateUtil: DateUtil,
   ) {
     this.formGroup = formBuilder.group({
       name: ['', Validators.required],
       contactName: ['', Validators.required],
-      date: ['', Validators.required],
+      date: ['', [Validators.required, this.validateDate.bind(this)]],
       cnpj: '',
     });
+  }
+
+  validateDate(control: FormControl) {
+    if (this._dateUtil.isValid(control.value)) return null;
+
+    return { invalidDate: true };
   }
 
   showAlreadyRegisteredCnpj() {
@@ -67,34 +80,11 @@ export class CreateClientModalComponent {
     return cnpjRegex.test(value.trim());
   }
 
-  isDateValid() {
-    const value = this.formGroup.get('date')!.value;
-
-    const [day, month, year] = value.split('/');
-
-    if (!month) return false;
-    if (!year) return false;
-
-    if (year.length !== 4) return false;
-
-    const parsedDay = parseInt(day);
-    const parsedMonth = parseInt(month);
-    const parsedYear = parseInt(year);
-
-    if (isNaN(parsedDay) || isNaN(parsedMonth) || isNaN(parsedYear))
-      return false;
-
-    if (parsedYear < 1800) return false;
-
-    return !isNaN(Date.parse(`${year}-${month.padStart(2, '0')}-${day}`));
-  }
-
   isFormValid() {
     if (!this.formGroup.valid) return false;
     if (!this.isCnpjValid()) return false;
     if (!this.isNameValid()) return false;
     if (!this.isContactNameValid()) return false;
-    if (!this.isDateValid()) return false;
 
     return true;
   }

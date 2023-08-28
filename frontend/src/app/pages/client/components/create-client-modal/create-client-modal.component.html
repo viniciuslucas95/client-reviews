@@ -67,7 +67,9 @@
                         id="date"
                         name="date">
 
-                <div *ngIf="formGroup.get('date')!.touched && !isDateValid()" class="input-error">
+                <div *ngIf="formGroup.get('date')!.touched && formGroup.get('date')!.hasError('invalidDate')"
+                     class="input-error"
+                >
                     <span>Insira uma data válida</span>
                 </div>
             </div>
