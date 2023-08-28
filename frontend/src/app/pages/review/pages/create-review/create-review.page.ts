@@ -1,246 +1,257 @@
 import { Component } from '@angular/core';
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import {TableContent} from "../../../../components/table/table.component.type";
-import {ClientReviewCreationTableContentItem} from "./create-review.dto";
-import ClientService from "../../../client/client.service";
-import DateUtil from "../../../../utils/date.util";
-import {CreateReviewModalComponent} from "./components/create-review-modal/create-review-modal.component";
-import {CreateClientReviewDto} from "../../review.dto";
-import ReviewService from "../../review.service";
+import { TableContent } from '../../../../components/table/table.component.type';
+import { ClientReviewCreationTableContentItem } from './create-review.dto';
+import ClientService from '../../../client/client.service';
+import DateUtil from '../../../../utils/date.util';
+import { CreateReviewModalComponent } from './components/create-review-modal/create-review-modal.component';
+import { CreateClientReviewDto } from '../../review.dto';
+import ReviewService from '../../review.service';
 
 @Component({
   selector: 'app-create-review-page',
   templateUrl: './create-review.page.html',
-  styleUrls: ['./create-review.page.scss']
+  styleUrls: ['./create-review.page.scss'],
 })
 export class CreateReviewPage {
-  public formGroup: FormGroup
+  public formGroup: FormGroup;
 
-  public tableContent:TableContent<ClientReviewCreationTableContentItem> = {
+  public tableContent: TableContent<ClientReviewCreationTableContentItem> = {
     total: 0,
     items: [],
     columns: [
       {
         key: 'name',
-        name: 'Nome'
+        name: 'Nome',
       },
       {
         key: 'contactName',
-        name: 'Contato'
+        name: 'Contato',
       },
       {
         key: 'cnpj',
-        name: "CNPJ"
+        name: 'CNPJ',
       },
       {
         key: 'lastReviewDate',
-        name: 'Última Avaliação'
+        name: 'Última Avaliação',
       },
       {
         key: 'buttons',
-        name: "Ações"
-      }
-    ]
-  }
+        name: 'Ações',
+      },
+    ],
+  };
 
-  public alreadyRegisteredDate?: string
-  public appliedFilter?: string
-  public page = 1
-  public isCreating = false
-  public invalidDate?: string
+  public alreadyRegisteredDate?: string;
+  public appliedFilter?: string;
+  public page = 1;
+  public isCreating = false;
+  public invalidDate?: string;
 
   private reviews: {
-    id: number | string,
-    score: number,
-    reason: string
-  }[] = []
+    id: number | string;
+    score: number;
+    reason: string;
+  }[] = [];
 
   constructor(
-      formBuilder: FormBuilder,
-      private readonly _clientService: ClientService,
-      private readonly _service: ReviewService,
-      private readonly _dateUtil: DateUtil,
-      private readonly _modalService: NgbModal,
-      private readonly _router: Router
+    formBuilder: FormBuilder,
+    private readonly _clientService: ClientService,
+    private readonly _service: ReviewService,
+    private readonly _dateUtil: DateUtil,
+    private readonly _modalService: NgbModal,
+    private readonly _router: Router,
   ) {
     this.formGroup = formBuilder.group({
-      date: [`${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear().toString()}`, Validators.required],
-      name: ''
-    })
+      date: [
+        `${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date()
+          .getFullYear()
+          .toString()}`,
+        Validators.required,
+      ],
+      name: '',
+    });
 
-    this.onPageChanged(this.page)
+    this.onPageChanged(this.page);
   }
 
-  onPageChanged(page:number){
-    this.page = page
-    const offset = (page - 1) * 10
+  onPageChanged(page: number) {
+    this.page = page;
+    const offset = (page - 1) * 10;
 
-    this._clientService.getPaginatedForReviewCreation(offset, this.appliedFilter).subscribe(res => {
-      if(res.items.length === 0 && this.page !== 1){
-        this.onPageChanged(1)
-        return
-      }
+    this._clientService
+      .getPaginatedForReviewCreation(offset, this.appliedFilter)
+      .subscribe((res) => {
+        if (res.items.length === 0 && this.page !== 1) {
+          this.onPageChanged(1);
+          return;
+        }
 
-      this.tableContent = {
-        ...this.tableContent,
-        total: res.count,
-        items: res.items.map(item => ({
-          ...item,
-          id: item.id.toString(),
-          cnpj: item.cnpj ?? "Não informado",
-          lastReviewDate: item.lastReviewDate ? this._dateUtil.formatToPtString(item.lastReviewDate) : 'Não Avaliado',
-          buttons: []
-        }))
-      }
+        this.tableContent = {
+          ...this.tableContent,
+          total: res.count,
+          items: res.items.map((item) => ({
+            ...item,
+            id: item.id.toString(),
+            cnpj: item.cnpj ?? 'Não informado',
+            lastReviewDate: item.lastReviewDate
+              ? this._dateUtil.formatToPtString(item.lastReviewDate)
+              : 'Não Avaliado',
+            buttons: [],
+          })),
+        };
 
-      this.updateClientsButtons()
-    })
+        this.updateClientsButtons();
+      });
   }
 
-  getDeleteButton(id: number | string){
+  getDeleteButton(id: number | string) {
     return {
       class: 'btn btn-danger btn-sm',
       iconClass: 'bi-x-lg',
-      onClick: () => this.onDeleteClientReview(id)
-    }
+      onClick: () => this.onDeleteClientReview(id),
+    };
   }
 
-  getNewButton(id: number | string){
+  getNewButton(id: number | string) {
     return {
       class: 'btn btn-primary btn-sm',
       iconClass: 'bi-plus-lg',
-      onClick: () => this.onNewClientReview(id)
-    }
+      onClick: () => this.onNewClientReview(id),
+    };
   }
 
-  hasReview(id: number | string){
-    return this.reviews.find(review => review.id.toString() == id) ? true : false
+  hasReview(id: number | string) {
+    return this.reviews.find((review) => review.id.toString() == id)
+      ? true
+      : false;
   }
 
-  updateClientsButtons(){
-    this.tableContent.items = this.tableContent.items.map(item => {
-      item.buttons = this.hasReview(item.id) ?
-          [this.getDeleteButton(item.id)] :
-          [this.getNewButton(item.id)]
+  updateClientsButtons() {
+    this.tableContent.items = this.tableContent.items.map((item) => {
+      item.buttons = this.hasReview(item.id)
+        ? [this.getDeleteButton(item.id)]
+        : [this.getNewButton(item.id)];
 
-      return item
-    })
+      return item;
+    });
   }
 
-  onDeleteClientReview(id: number | string){
-    this.reviews = this.reviews.filter(item => item.id != id)
+  onDeleteClientReview(id: number | string) {
+    this.reviews = this.reviews.filter((item) => item.id != id);
 
-    this.updateClientsButtons()
+    this.updateClientsButtons();
   }
 
-  onApplyFilter(){
-    this.appliedFilter = this.formGroup.get('name')!.value
+  onApplyFilter() {
+    this.appliedFilter = this.formGroup.get('name')!.value;
 
-    this.onPageChanged(this.page)
+    this.onPageChanged(this.page);
   }
 
-  onNewClientReview(id: number | string){
-    const client = this.tableContent.items.find(item => item.id == id)
+  onNewClientReview(id: number | string) {
+    const client = this.tableContent.items.find((item) => item.id == id);
 
-    if(!client) return
+    if (!client) return;
 
     const modalRef = this._modalService.open(CreateReviewModalComponent);
 
     modalRef.componentInstance.client = {
       id,
-      name: client.name
-    }
+      name: client.name,
+    };
 
     modalRef.result
-        .then((res) => {
-          this.reviews.push({
-            id,
-            score: res.score,
-            reason: res.reason
-          })
+      .then((res) => {
+        this.reviews.push({
+          id,
+          score: res.score,
+          reason: res.reason,
+        });
 
-          this.updateClientsButtons()
-        })
-        .catch(_ => {})
+        this.updateClientsButtons();
+      })
+      .catch((_) => {});
   }
 
-  isDateValid(){
-    const value = this.formGroup.get('date')!.value
+  isDateValid() {
+    const value = this.formGroup.get('date')!.value;
 
-    if(value === this.invalidDate) return false
+    if (value === this.invalidDate) return false;
 
-    const [month, year] = value.split('/')
+    const [month, year] = value.split('/');
 
-    if(!year) return false
+    if (!year) return false;
 
-    if(year.length !== 4) return false
+    if (year.length !== 4) return false;
 
-    const parsedMonth = parseInt(month)
-    const parsedYear = parseInt(year)
+    const parsedMonth = parseInt(month);
+    const parsedYear = parseInt(year);
 
-    if(isNaN(parsedMonth) || isNaN(parsedYear)) return false
+    if (isNaN(parsedMonth) || isNaN(parsedYear)) return false;
 
-    if(parsedYear < 1800) return false
+    if (parsedYear < 1800) return false;
 
-    return !isNaN(Date.parse(`${year}-${month}-01`))
+    return !isNaN(Date.parse(`${year}-${month}-01`));
   }
 
-  isFormValid(){
-    if(!this.formGroup.valid) return false
-    if(!this.isDateValid()) return false
+  isFormValid() {
+    if (!this.formGroup.valid) return false;
+    if (!this.isDateValid()) return false;
 
-    return true
+    return true;
   }
 
-  showAlreadyRegisteredDate(){
-    if(!this.isDateValid()) return false
-    if(!this.alreadyRegisteredDate) return false
-    if(this.getFormattedDate() !== this.alreadyRegisteredDate) return false
+  showAlreadyRegisteredDate() {
+    if (!this.isDateValid()) return false;
+    if (!this.alreadyRegisteredDate) return false;
+    if (this.getFormattedDate() !== this.alreadyRegisteredDate) return false;
 
-    return true
+    return true;
   }
 
-  getFormattedDate(){
-    const value = this.formGroup.get('date')!.value
+  getFormattedDate() {
+    const value = this.formGroup.get('date')!.value;
 
-    const [month, year] = value.split('/')
+    const [month, year] = value.split('/');
 
-    return `${year}-${month.padStart(2, '0')}-01T00:00:00.000Z`
+    return `${year}-${month.padStart(2, '0')}-01T00:00:00.000Z`;
   }
 
-  onCreateReview(){
-    if(this.isFormValid()){
-      this.isCreating = true
+  onCreateReview() {
+    if (this.isFormValid()) {
+      this.isCreating = true;
 
-      this._service.isDateAlreadyRegistered(this.getFormattedDate())
-          .subscribe({
-            next: res => {
-              if(res) {
-                this.isCreating = false
-                this.alreadyRegisteredDate = this.getFormattedDate()
-                return
-              }
+      this._service.isDateAlreadyRegistered(this.getFormattedDate()).subscribe({
+        next: (res) => {
+          if (res) {
+            this.isCreating = false;
+            this.alreadyRegisteredDate = this.getFormattedDate();
+            return;
+          }
 
-              const dtos: CreateClientReviewDto[] = this.reviews.map(item => ({
-                clientId: typeof item.id === 'string' ? parseInt(item.id) : item.id,
-                score: item.score,
-                reason: item.reason,
-                date: this.getFormattedDate()
-              }))
+          const dtos: CreateClientReviewDto[] = this.reviews.map((item) => ({
+            clientId: typeof item.id === 'string' ? parseInt(item.id) : item.id,
+            score: item.score,
+            reason: item.reason,
+            date: this.getFormattedDate(),
+          }));
 
-              this._service.create(dtos).subscribe(_ =>
-                  this._router.navigate(['avaliacoes/1']))
-            },
-            error: _ => {
-              this.isCreating = false
-              this.invalidDate = this.formGroup.get('date')!.value
-            }
-          })
-    }else{
-      this.formGroup.markAllAsTouched()
+          this._service
+            .create(dtos)
+            .subscribe((_) => this._router.navigate(['avaliacoes/1']));
+        },
+        error: (_) => {
+          this.isCreating = false;
+          this.invalidDate = this.formGroup.get('date')!.value;
+        },
+      });
+    } else {
+      this.formGroup.markAllAsTouched();
     }
   }
 }

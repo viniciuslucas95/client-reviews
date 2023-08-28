@@ -1,6 +1,6 @@
 type PaginatedDto<T> = {
-    count: number,
-    items: T[]
-}
+  count: number;
+  items: T[];
+};
 
-export default PaginatedDto
+export default PaginatedDto;

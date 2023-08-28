@@ -1,34 +1,34 @@
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-export default class DateUtil{
-    formatToPtString(date: string | Date){
-        const dateString = typeof date === 'string' ? date : date.toISOString()
+export default class DateUtil {
+  formatToPtString(date: string | Date) {
+    const dateString = typeof date === 'string' ? date : date.toISOString();
 
-        const [splittedDate, splittedTime] = dateString.split('T')
-        const [year, month, day] = splittedDate.split('-')
-        const time = splittedTime.split('.')[0]
+    const [splittedDate, splittedTime] = dateString.split('T');
+    const [year, month, day] = splittedDate.split('-');
+    const time = splittedTime.split('.')[0];
 
-        return `${day}/${month}/${year} ${time}`
-    }
+    return `${day}/${month}/${year} ${time}`;
+  }
 
-    formatToPtStringMonthAndYear(date: string | Date){
-        const dateString = typeof date === 'string' ? date : date.toISOString()
+  formatToPtStringMonthAndYear(date: string | Date) {
+    const dateString = typeof date === 'string' ? date : date.toISOString();
 
-        const [splittedDate] = dateString.split('T')
-        const [year, month] = splittedDate.split('-')
+    const [splittedDate] = dateString.split('T');
+    const [year, month] = splittedDate.split('-');
 
-        return `${month}/${year}`
-    }
+    return `${month}/${year}`;
+  }
 
-    formatToPtStringDayMonthAndYear(date: string | Date){
-        const dateString = typeof date === 'string' ? date : date.toISOString()
+  formatToPtStringDayMonthAndYear(date: string | Date) {
+    const dateString = typeof date === 'string' ? date : date.toISOString();
 
-        const [splittedDate] = dateString.split('T')
-        const [year, month, day] = splittedDate.split('-')
+    const [splittedDate] = dateString.split('T');
+    const [year, month, day] = splittedDate.split('-');
 
-        return `${day}/${month}/${year}`
-    }
+    return `${day}/${month}/${year}`;
+  }
 }

@@ -1,5 +1,5 @@
 const injectable = {
-    clientService: 'client-service'
-}
+  clientService: 'client-service',
+};
 
-export default injectable
+export default injectable;

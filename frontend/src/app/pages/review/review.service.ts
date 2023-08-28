@@ -1,27 +1,31 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import ServiceBase from "../../base/service.base";
-import PaginatedDto from "../../dtos/paginated.dto";
-import {CreateClientReviewDto, PaginatedClientReviewDto} from "./review.dto";
+import ServiceBase from '../../base/service.base';
+import PaginatedDto from '../../dtos/paginated.dto';
+import { CreateClientReviewDto, PaginatedClientReviewDto } from './review.dto';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-export default class ReviewService extends ServiceBase{
-    constructor(httpClient:HttpClient) {
-        super("client-reviews", httpClient);
-    }
+export default class ReviewService extends ServiceBase {
+  constructor(httpClient: HttpClient) {
+    super('client-reviews', httpClient);
+  }
 
-    getPaginated(offset = 0){
-        return this.httpClient.get<PaginatedDto<PaginatedClientReviewDto>>(this.baseUrl + `?offset=${offset.toString()}`)
-    }
+  getPaginated(offset = 0) {
+    return this.httpClient.get<PaginatedDto<PaginatedClientReviewDto>>(
+      this.baseUrl + `?offset=${offset.toString()}`,
+    );
+  }
 
-    create(dtos: CreateClientReviewDto[]){
-        return this.httpClient.post(this.baseUrl, dtos)
-    }
+  create(dtos: CreateClientReviewDto[]) {
+    return this.httpClient.post(this.baseUrl, dtos);
+  }
 
-    isDateAlreadyRegistered(date: string){
-        return this.httpClient.get<boolean>(this.baseUrl + '/date-availability' + `?date=${date}`)
-    }
+  isDateAlreadyRegistered(date: string) {
+    return this.httpClient.get<boolean>(
+      this.baseUrl + '/date-availability' + `?date=${date}`,
+    );
+  }
 }
