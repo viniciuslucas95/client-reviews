@@ -1,15 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup} from "@angular/forms";
 
 import {TableContent} from "../../components/table/table.component.type";
 import {ClientTableContentItem} from "./client.dto";
-import ClientService from "./client.service";
 import DateUtil from "../../utils/date.util";
 import {CreateClientModalComponent} from "./components/create-client-modal/create-client-modal.component";
 import CategoryUtil from "../../utils/category.util";
 import CnpjUtil from "../../utils/cnpj.util";
+import {IClientService} from "./client.interface";
+import injectable from "../../constants/injectable.constant";
 
 @Component({
   selector: 'app-client-page',
@@ -52,7 +53,8 @@ export class ClientPage implements OnInit {
 
   constructor(
       formBuilder: FormBuilder,
-      private readonly _service: ClientService,
+      @Inject(injectable.clientService)
+      private readonly _service: IClientService,
       private readonly _dateUtil: DateUtil,
       private readonly _categoryUtil: CategoryUtil,
       private readonly _modalService: NgbModal,

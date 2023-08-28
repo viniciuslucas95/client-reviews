@@ -3,12 +3,11 @@ import {HttpClient} from "@angular/common/http";
 
 import ServiceBase from "../../base/service.base";
 import PaginatedDto from "../../dtos/paginated.dto";
-import {CreateClientDto, PaginatedClientDto, PaginatedClientForReviewCreationDto} from "./client.dto";
+import {CreateClientDto,  PaginatedClientDto, PaginatedClientForReviewCreationDto} from "./client.dto";
+import {IClientService} from "./client.interface";
 
-@Injectable({
-    providedIn: 'root'
-})
-export default class ClientService extends ServiceBase {
+@Injectable()
+export default class ClientService extends ServiceBase implements IClientService{
     constructor(httpClient:HttpClient) {
         super("clients", httpClient);
     }

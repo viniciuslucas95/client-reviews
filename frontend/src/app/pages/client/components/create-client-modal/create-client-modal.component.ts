@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import ClientService from "../../client.service";
 import {CreateClientDto} from "../../client.dto";
+import injectable from "../../../../constants/injectable.constant";
+import {IClientService} from "../../client.interface";
 
 @Component({
   selector: 'app-create-review-modal',
@@ -18,7 +19,8 @@ export class CreateClientModalComponent {
   constructor(
       formBuilder: FormBuilder,
       private readonly _activeModal: NgbActiveModal,
-      private readonly _service: ClientService
+      @Inject(injectable.clientService)
+      private readonly _service: IClientService
   ) {
     this.formGroup = formBuilder.group({
       name: ['', Validators.required],
